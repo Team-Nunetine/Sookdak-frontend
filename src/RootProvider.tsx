@@ -3,7 +3,7 @@ import type { FC } from "react"
 import { Theme } from "@react-navigation/native"
 import { DarkTheme, DayTheme } from "./Themes"
 
-export type ContextType = {
+type ContextType = {
     user: {
         token: string,
         username: string

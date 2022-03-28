@@ -1,4 +1,5 @@
-import { NavigationContainer, StackActions } from '@react-navigation/native'
+import 'react-native-gesture-handler'
+import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
 import MainNavigator from './src/MainNavigator'
 import AuthNavigator from './src/pages/auth/AuthNavigator'
