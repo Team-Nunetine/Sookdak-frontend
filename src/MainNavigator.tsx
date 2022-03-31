@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useRootContext } from './RootProvider'
 import { ParamListBase, RouteProp } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import HomeNavigator from './pages/home/HomeNavigator'
 import ChettingNavigator from './pages/chetting/ChettingNavigator'
 import TimetableNavigator from './pages/timetable/TimetableNavigator'
@@ -15,15 +16,15 @@ export default function MainNavigator() {
     const scOpt = ({ route }: { route: RouteProp<ParamListBase, string> }) => {
         return {
             headerShown: false,
-            tabBarIcon: ({ focused, size }: { focused: boolean, size: number }) => {
+            tabBarIcon: ({ focused }: { focused: boolean }) => {
                 const { name } = route
-                return <Icon name={foo[name] + (focused ? '' : '-outline')}
-                    size={size + (focused ? 6 : 0)}
-                    color={focused ? '#003087' : '#151515'} />
+                return <Ionicons name={foo[name] + (focused ? '' : '-outline')}
+                        size={focused ? 27 : 22}
+                        color={focused ? '#003087' : '#151515'} />
             },
             tabBarActiveTintColor: '#003087',
             tabBarShowLabel: false,
-            tabBarHideOnKeyboard: true,
+            tabBarHideOnKeyboard: true
         }
     }
     // if (context.user.token == null || context.user.token == '')
@@ -42,7 +43,7 @@ interface Foo {
 
 let foo: Foo = {
     'HomeNavigator': 'home',
-    'TimetableNavigator': 'calendar-text', //cards //widgets // gift // gamepad-circle //flash
-    'ChettingNavigator': 'chat-processing', //bell-ring
-    'MypageNavigator': 'account'
+    'TimetableNavigator': 'grid', //cards //widgets // gift // gamepad-circle //flash
+    'ChettingNavigator': 'chatbubbles', //bell-ring
+    'MypageNavigator': 'settings'
 }

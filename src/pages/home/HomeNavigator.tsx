@@ -1,11 +1,16 @@
 import { createDrawerNavigator, DrawerContentComponentProps, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Feather from 'react-native-vector-icons/Feather'
+import BoardSearch from './BoardSearch'
+import FavoritesEdit from './FavoritesEdit'
 import HomeMain from './HomeMain'
 import { HomeProvider, useHomeContext } from './HomeProvider'
 import PostDetail from './PostDetail'
 import PostList from './PostList'
+import PostSearch from './PostSearch'
+import PostUpload from './PostUpload'
 
 export default function HomeNavigator() {
     const Drawer = createDrawerNavigator()
@@ -15,6 +20,7 @@ export default function HomeNavigator() {
             drawerContent={props => <CustomDrawerContent {...props} />}>
             <Drawer.Screen name='HomeMain' component={HomeMain} />
             <Drawer.Screen name='PostStack' component={PostStack} />
+            <Drawer.Screen name='FavoritesStack' component={FavoritesStack} />
         </Drawer.Navigator>
     </HomeProvider>
 }
@@ -23,38 +29,66 @@ function PostStack() {
     const Stack = createStackNavigator()
     return <Stack.Navigator
         screenOptions={{ headerShown: false, animationEnabled: false }}>
+        <Stack.Screen name='PostDetail' component={PostDetail} />
         <Stack.Screen name='PostList' component={PostList}
             initialParams={{ boardName: 'route?.params.boardName' }} />
-        <Stack.Screen name='PostDetail' component={PostDetail} />
+        <Stack.Screen name='PostUpload' component={PostUpload} />
+        <Stack.Screen name='PostSearch' component={PostSearch} />
+    </Stack.Navigator>
+}
+
+function FavoritesStack() {
+    const Stack = createStackNavigator()
+    return <Stack.Navigator
+        screenOptions={{ headerShown: false, animationEnabled: false }}>
+        <Stack.Screen name='FavoritesEdit' component={FavoritesEdit} />
+        <Stack.Screen name='BoardSearch' component={BoardSearch} />
     </Stack.Navigator>
 }
 
 function CustomDrawerContent(props: DrawerContentComponentProps) {
     const { boards, currentBoard, setCurrentBoard } = useHomeContext()
-    return (
-        <DrawerContentScrollView {...props}>
+    return <DrawerContentScrollView {...props}>
+        <View style={styles.topView}>
             <Text style={styles.title}>즐겨찾는 게시판</Text>
-            {boards.map((v, i) => <DrawerItem label={v} key={i}
-                focused={currentBoard == i}
-                activeTintColor='#003087'
-                onPress={() => {
-                    setCurrentBoard(i)
-                    props.navigation.navigate('PostStack', {
-                        screen: 'PostList',
-                        params: { boardName: v }
-                    })
-                }} />
-            )}
-        </DrawerContentScrollView>
-    );
+            <TouchableOpacity onPress={() => {
+                props.navigation.navigate('FavoritesStack', { screen: 'FavoritesEdit' })
+            }}>
+                <Text style={styles.edit}>
+                    <Feather name='edit' size={12} /> 편집
+                </Text>
+            </TouchableOpacity>
+        </View>
+        {boards.map((v, i) => <DrawerItem label={v} key={i}
+            focused={currentBoard == i}
+            activeTintColor='#003087'
+            onPress={() => {
+                setCurrentBoard(i)
+                props.navigation.navigate('PostStack', {
+                    screen: 'PostList',
+                    params: { boardName: v }
+                })
+            }} />
+        )}
+    </DrawerContentScrollView>
 }
 
 const styles = StyleSheet.create({ // CustomDrawerContent에서만 사용
+    topView: {
+        marginBottom: 13,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+    },
     title: {
         fontSize: 14,
         color: '#003087',
-        margin: 15,
         fontWeight: 'bold',
-        marginBottom: 28
+        paddingVertical: 15,
+        paddingLeft: 15
+    },
+    edit: {
+        fontSize: 12,
+        paddingVertical: 15,
+        paddingHorizontal: 30
     }
 })
