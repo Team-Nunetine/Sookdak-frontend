@@ -13,7 +13,7 @@ const Stack = createNativeStackNavigator();
 export default () => <RootProvider>
     <NavigationContainer>
         <Stack.Navigator>
-            <Stack.Screen name ="AuthNavigator" component={AuthNavigator}  options={{ headerShown: false }}/>
+            {/* <Stack.Screen name ="AuthNavigator" component={AuthNavigator}  options={{ headerShown: false }}/> */}
             <Stack.Screen name ="MypageNavigator" component={MypageNavigator}  options={{ headerShown: false }}/>
         </Stack.Navigator>
         {/* <AuthNavigator/>

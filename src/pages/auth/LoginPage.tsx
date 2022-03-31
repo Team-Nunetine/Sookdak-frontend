@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, Alert} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import CustomButton from '../../components/CustomButton';
-import { GoogleSignin, GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
 
 const LoginPage = ({navigation}: {navigation: any}) => {
 
     const signIn = () => {
-        GoogleSignin.signOut()
-        GoogleSignin.configure({hostedDomain: 'sookmyung.ac.kr'});
+        //GoogleSignin.signOut()
+        GoogleSignin.configure({
+            hostedDomain: 'sookmyung.ac.kr',
+            webClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
+            iosClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
+            offlineAccess: true,
+            forceCodeForRefreshToken: true,
+        });
         GoogleSignin.signIn().then((res) => {console.log(res)
         if (res.user.email.search('@sookmyung.ac.kr') == -1) {
             GoogleSignin.signOut()
             Alert.alert('숙명 메일로 로그인해주세요')
         }
-    })
-}
-    
+        });
+    }
+
     return(
         <KeyboardAwareScrollView
         contentContainerStyle={{flex: 1}}
@@ -36,8 +41,9 @@ const LoginPage = ({navigation}: {navigation: any}) => {
         </SafeAreaView>
         </KeyboardAwareScrollView>
     );
+    }
 
-};
+
 
 const styles = StyleSheet.create({
     TopText: {

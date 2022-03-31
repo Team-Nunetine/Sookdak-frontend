@@ -9,13 +9,16 @@ export default function MypageMain({navigation}: {navigation: any}) {
             title: '계정',
             contentList: [
                 {
-                    content: '로그아웃'
+                    content: '로그아웃',
+                    screen: 'MypageLogout'
                 },
                 {
-                    content: '회원 탈퇴'
+                    content: '회원 탈퇴',
+                    screen: 'MypageWithdrawal'
                 },
                 {
                     content: '숙명인 인증',
+                    screen: 'MypageAuth'
                 }
             ]
         },
@@ -23,10 +26,12 @@ export default function MypageMain({navigation}: {navigation: any}) {
             title: '커뮤니티',
             contentList: [
                 {
-                    content: "내가 쓴 글"
+                    content: "내가 쓴 글",
+                    screen: 'MypageMywriting'
                 },
                 {
-                    content: "내가 쓴 댓글"
+                    content: "내가 쓴 댓글",
+                    screen: 'MypageMycmt'
                 }
             ]
         },
@@ -34,10 +39,8 @@ export default function MypageMain({navigation}: {navigation: any}) {
             title: '설정',
             contentList: [
                 {
-                    content: '다크모드'
-                },
-                {
-                    content: '알림 설정'
+                    content: '푸시 알림 설정',
+                    screen: 'MypageAlarm'
                 }
             ]
         },
@@ -46,7 +49,7 @@ export default function MypageMain({navigation}: {navigation: any}) {
     const navi = useNavigation<any>()
 
     return (
-    <SafeAreaView style={{ flex: 1, marginLeft: 20, marginTop: 100}}>
+    <SafeAreaView style={{ flex: 1, marginLeft: 20, marginTop: 100 }}>
         <View style={styles.titleView}>
             <Text style={styles.UserText}>누네띠네님</Text>
         </View>
@@ -55,15 +58,11 @@ export default function MypageMain({navigation}: {navigation: any}) {
             {v.contentList.map((content, j) => <TouchableOpacity style={styles.contentList}
                      key = {j}
                      onPress={() => {
-                        console.log(j);
-                        //  navi.navigate('MypageAuth', {
-                        //      screen: 'MypageAuth',
-                        //      params: { boardName: v.contentList}
-                        //  })
+                        console.log(content.content);
+                         navi.navigate(content.screen)
                      }}>
-                        <Text style={styles.content}>{content.content}
-                            <Icon name='chevron-right' size={23} color='#003087' />
-                            </Text>
+                        <Text style={styles.content}>{content.content}</Text>
+                        <Icon name='chevron-right' size={23} color='#003087' />
                      </TouchableOpacity>)}
         </View>)}
         
@@ -93,9 +92,11 @@ const styles = StyleSheet.create({
     },
     contentList: {
         paddingBottom: 30,
-        paddingHorizontal: 20
+        paddingHorizontal: 20,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     content: {
-        fontSize: 20,
+        fontSize: 20
     }
 });
