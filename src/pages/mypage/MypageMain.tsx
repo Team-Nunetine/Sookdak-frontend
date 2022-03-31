@@ -49,10 +49,10 @@ export default function MypageMain({navigation}: {navigation: any}) {
     const navi = useNavigation<any>()
 
     return (
-    <SafeAreaView style={{ flex: 1, marginLeft: 20, marginTop: 100 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white'}}>
         <View style={styles.titleView}>
             <Text style={styles.UserText}>누네띠네님</Text>
-        </View>
+            </View>
         {data.map((v, i) => <View key={i} style={styles.contentListContainer}>
             <Text style={styles.title}>{v.title}</Text>
             {v.contentList.map((content, j) => <TouchableOpacity style={styles.contentList}
@@ -73,28 +73,32 @@ export default function MypageMain({navigation}: {navigation: any}) {
 
 const styles = StyleSheet.create({
     UserText: {
-        fontSize: 35
+        fontSize: 35,
     },
     title: {
         color: '#003087',
         fontSize: 20,
-        paddingBottom: 20
+        paddingBottom: 20,
+        fontWeight: 'bold',
     },
     titleView: {
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 20
+        padding: 20,
+        marginTop: 50,
+        marginLeft: 20,
     },
     contentListContainer: {
         marginTop: 20,
         marginHorizontal: 20,
+        marginLeft: 40
     },
     contentList: {
         paddingBottom: 30,
         paddingHorizontal: 20,
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
     },
     content: {
         fontSize: 20

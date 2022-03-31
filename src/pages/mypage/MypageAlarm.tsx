@@ -25,9 +25,9 @@ export default function MypageAlarm() {
                     </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087'}}
-                        thumbColor={isEnabled1 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch1}
                         value={isEnabled1}
                     />
@@ -39,9 +39,9 @@ export default function MypageAlarm() {
                     </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087' }}
-                        thumbColor={isEnabled2 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch2}
                         value={isEnabled2}
                     />
@@ -53,9 +53,9 @@ export default function MypageAlarm() {
                 </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087'}}
-                        thumbColor={isEnabled3 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch3}
                         value={isEnabled3}
                     />
@@ -67,9 +67,9 @@ export default function MypageAlarm() {
                     </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087' }}
-                        thumbColor={isEnabled4 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch4}
                         value={isEnabled4}
                     />

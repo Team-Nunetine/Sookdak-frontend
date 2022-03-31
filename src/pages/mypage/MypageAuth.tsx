@@ -44,11 +44,12 @@ const ButtonContainer = styled.TouchableOpacity`
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 20,
+        backgroundColor: 'white'
     },
     title: {
         fontSize: 20,
         textAlign: 'center',
         marginVertical: 14,
+        marginHorizontal: 20
     }
 })
