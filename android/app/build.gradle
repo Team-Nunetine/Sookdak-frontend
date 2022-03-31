@@ -189,6 +189,8 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.android.gms:play-services-auth:20.1.0' // 구글 로그인
+
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

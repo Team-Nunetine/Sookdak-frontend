@@ -1,16 +1,17 @@
 import { DrawerActions, useFocusEffect, useNavigation } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import Feather from 'react-native-vector-icons/Feather'
 import { useHomeContext } from './HomeProvider'
 
-export default function HomeMain() {
+export default function HomeMain({ navigation, route }) {
     const [data, setData] = useState([
         {
             title: '숙플레이스',
             contentList: [
                 {
-                    content: '숙플 게시글 내용1',
+                    content: '숙플 게시글 내용1\n최대\n3줄까지\n보여지기',
                     likeCount: 10,
                     commentCount: 2,
                     image: true
@@ -76,42 +77,47 @@ export default function HomeMain() {
             ]
         },
     ])
-    const navi = useNavigation<any>()
     const { setCurrentBoard } = useHomeContext()
     useFocusEffect(() => setCurrentBoard(-1))
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-        <View style={styles.topView}>
-            <TouchableOpacity onPress={() => { navi.dispatch(DrawerActions.openDrawer()) }}>
-                <Icon name='menu' size={25} color='#555' />
-            </TouchableOpacity>
-            <Text style={styles.topText}>숙닥숙닥</Text>
-            <TouchableOpacity>
-                <Icon name='bell-outline' size={25} color='#555' />
-            </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
+            style={styles.menuIcon}>
+            <Ionicons name='menu-outline' size={25} color='#555' />
+        </TouchableOpacity>
+        <Text style={styles.appName}>숙닥숙닥</Text>
+        <TouchableOpacity onPress={() => { }}
+            style={styles.bellIcon}>
+            <Ionicons name='notifications-outline' size={22} color='#555' />
+        </TouchableOpacity>
         <ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
             {data.map((v, i) => <View key={i} style={styles.contentListContainer}>
                 <TouchableOpacity style={styles.titleView}
                     onPress={() => {
                         setCurrentBoard(i)
-                        navi.navigate('PostStack', {
+                        navigation.navigate('PostStack', {
                             screen: 'PostList',
                             params: { boardName: v.title }
                         })
                     }}>
                     <Text style={styles.title}>{v.title}</Text>
-                    <Icon name='chevron-right' size={23} color='#003087' />
+                    <Ionicons name='chevron-forward' size={18} color='#003087' />
                 </TouchableOpacity>
                 {v.contentList.map((content, j) => <TouchableOpacity style={styles.contentView}
-                    key={i + 'i' + j}>
-                    <Text style={styles.content}>{content.content}</Text>
+                    key={i + 'i' + j}
+                    onPress={() => {
+                        navigation.navigate('PostStack', {
+                            screen: 'PostDetail',
+                            params: { boardName: v.title }
+                        })
+                    }}>
+                    <Text style={styles.content} numberOfLines={3}>{content.content}</Text>
                     <View style={styles.countView}>
-                        <Icon name='thumb-up-outline' size={11} color='#AD3E3E' />
+                        <Ionicons name='heart-outline' size={12} color='#AD3E3E' />
                         <Text style={[styles.count, { color: '#AD3E3E' }]}>{content.likeCount}</Text>
-                        <Icon name='comment-processing-outline' size={11} color='#003087' />
+                        <Ionicons name='chatbox-ellipses-outline' size={12} color='#003087' />
                         <Text style={[styles.count, { color: '#003087' }]}>{content.commentCount}</Text>
                         {content.image ?
-                            <Icon name='image-outline' size={11} color='#333' />
+                            <Feather name='paperclip' size={10} color='#333' />
                             : undefined}
                     </View>
                 </TouchableOpacity>)}
@@ -121,25 +127,23 @@ export default function HomeMain() {
 }
 
 const styles = StyleSheet.create({
-    topView: {
-        padding: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    },
-    topText: {
+    appName: {
         fontSize: 16,
         color: '#003087',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        paddingVertical: 20
     },
     contentListContainer: {
-        marginTop: 20,
-        marginHorizontal: 20,
+        marginVertical: 10,
+        marginHorizontal: 20
     },
     titleView: {
         justifyContent: 'space-between',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 20
+        paddingVertical: 20,
+        paddingHorizontal: 15
     },
     title: {
         color: '#003087',
@@ -147,8 +151,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     contentView: {
-        paddingBottom: 20,
-        paddingHorizontal: 20
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        marginVertical: 3,
+        backgroundColor: '#f9f9f9',
+        borderRadius: 10
     },
     content: {
         color: '#333',
@@ -157,12 +164,24 @@ const styles = StyleSheet.create({
     countView: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 7
+        marginTop: 8
     },
     count: {
         fontSize: 11,
-        marginLeft: 2,
-        marginRight: 7,
+        marginLeft: 3,
+        marginRight: 8,
         color: '#333'
+    },
+    menuIcon: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: 20
+    },
+    bellIcon: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        padding: 20
     }
 })
