@@ -9,8 +9,6 @@ const LoginPage = ({navigation}: {navigation: any}) => {
         //GoogleSignin.signOut()
         GoogleSignin.configure({
             hostedDomain: 'sookmyung.ac.kr',
-            webClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
-            iosClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
             offlineAccess: true,
             forceCodeForRefreshToken: true,
         });
