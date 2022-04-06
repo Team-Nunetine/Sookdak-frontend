@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import { SafeAreaView, Text, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { useRootContext } from '../../RootProvider';
 
 export default function MypageMain({navigation}: {navigation: any}) {
     const[data, setData] = useState([
@@ -47,11 +48,12 @@ export default function MypageMain({navigation}: {navigation: any}) {
     ]);
 
     const navi = useNavigation<any>()
+    const rootContext = useRootContext();
 
     return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white'}}>
         <View style={styles.titleView}>
-            <Text style={styles.UserText}>누네띠네님</Text>
+            <Text style={styles.UserText}>{rootContext.user.username}님</Text>
             </View>
         {data.map((v, i) => <View key={i} style={styles.contentListContainer}>
             <Text style={styles.title}>{v.title}</Text>
@@ -73,11 +75,12 @@ export default function MypageMain({navigation}: {navigation: any}) {
 
 const styles = StyleSheet.create({
     UserText: {
-        fontSize: 35,
+        fontSize: 25,
     },
     title: {
         color: '#003087',
-        fontSize: 20,
+        fontSize: 17,
+        fontFamily: 'JalnanOTF',
         paddingBottom: 20,
         fontWeight: 'bold',
     },
@@ -101,6 +104,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     content: {
-        fontSize: 20
+        fontSize: 15,
     }
 });

@@ -1,24 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, Alert} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { GoogleSignin, GoogleSigninButton, statusCodes } from '@react-native-google-signin/google-signin';
+import { GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import { useRootContext } from '../../RootProvider';
+import axios from 'axios';
 
 const LoginPage = ({navigation}: {navigation: any}) => {
 
-    const signIn = () => {
-        //GoogleSignin.signOut()
+    useEffect(() => {
         GoogleSignin.configure({
             hostedDomain: 'sookmyung.ac.kr',
-            webClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
-            iosClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
+            webClientId: '',
+            iosClientId: '',
             offlineAccess: true,
             forceCodeForRefreshToken: true,
         });
-        GoogleSignin.signIn().then((res) => {console.log(res)
-        if (res.user.email.search('@sookmyung.ac.kr') == -1) {
-            GoogleSignin.signOut()
-            Alert.alert('숙명 메일로 로그인해주세요')
-        }
+    }, [])
+    const rootContext = useRootContext();
+
+    let accessToken;
+    let refreshToken;
+
+    const signIn = () => {
+        GoogleSignin.signIn().then((res) => {
+            console.log(res.user.givenName, res.user.email)
+            rootContext.setUser({token: res.idToken, username: res.user.name});
+            axios.post('http://52.78.202.206:8080/api/user/login', {
+                email: res.user.email
+            })
+            .then(function (res) {
+                accessToken = res.data.data.accessToken;
+                console.log(accessToken)
+                refreshToken = res.data.data.refreshToken;
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+            
+            axios.get('http://52.78.202.206:8080/api/user/me', {
+                headers: {
+                    authorization: `Bearer ${accessToken}`,
+                }
+            })
+            .then(function (res) {
+                console.log(res)
+            })
+            .catch(function (err) {
+                console.log("왜 에러일까",err)
+            })
+        }).catch((err) => {
+            console.log(err)
         });
     }
 
@@ -26,7 +57,7 @@ const LoginPage = ({navigation}: {navigation: any}) => {
         <KeyboardAwareScrollView
         contentContainerStyle={{flex: 1}}
         extraHeight={20}>
-            <SafeAreaView style = {{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+            <SafeAreaView style = {{flex:1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'}}>
             <Image 
              style={{height:'20%', width:'35%', resizeMode: 'cover'}}
              source={{uri:"https://www.sookmyung.ac.kr/sites/sookmyungkr/images/sub/contents/ui_symbol_01.png"}}/>
@@ -37,7 +68,7 @@ const LoginPage = ({navigation}: {navigation: any}) => {
                 style={{ width: 250, height: 48 }}
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
-                onPress={signIn}/>
+                onPress={signIn} />
         </SafeAreaView>
         </KeyboardAwareScrollView>
     );

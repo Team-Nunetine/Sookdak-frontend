@@ -15,10 +15,10 @@ export default function MypageNavigator() {
     return <Stack.Navigator >
         <Stack.Screen name='마이페이지' component={MypageMain} options={{ headerShown: false }}/>
         <Stack.Screen name='MypageLogout' component={MypageLogout} options={{ headerShown: false}}/>
-        <Stack.Screen name='MypageWithdrawal' component={MypageWithdrawal} options={{title: '회원 탈퇴'}}/>
-        <Stack.Screen name='MypageAuth' component={MypageAuth} options={{title: '숙명인 인증'}}/>
-        <Stack.Screen name='MypageMywriting' component={MypageMywriting} options={{title: '내가 쓴 글'}}/>
-        <Stack.Screen name='MypageMycmt' component={MypageMycmt} options={{title: '내가 쓴 댓글'}}/>
-        <Stack.Screen name='MypageAlarm' component={MypageAlarm} options={{title: '푸시 알림 설정'}}/>
+        <Stack.Screen name='MypageWithdrawal' component={MypageWithdrawal} options={{ headerShown: false}}/>
+        <Stack.Screen name='MypageAuth' component={MypageAuth} options={{ headerShown: false}}/>
+        <Stack.Screen name='MypageMywriting' component={MypageMywriting} options={{ headerShown: false }}/>
+        <Stack.Screen name='MypageMycmt' component={MypageMycmt} options={{ headerShown: false }}/>
+        <Stack.Screen name='MypageAlarm' component={MypageAlarm} options={{ headerShown: false }}/>
     </Stack.Navigator>
 }

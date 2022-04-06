@@ -1,13 +1,19 @@
-import React from 'react';
-import { StyleSheet, View, Button, Text, ScrollView, Image} from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, Button, Text, ScrollView, Image, TouchableOpacity, Platform, Alert} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
-import CameraRoll from '@react-native-community/cameraroll';
+import Octicons from 'react-native-vector-icons/Octicons';
 
-export default function MypageAuth() {
+
+export default function MypageAuth({navigation}) {
     
     return(
         <SafeAreaView style={styles.container}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}
+            style={styles.backIcon}>
+            <Octicons name='chevron-left' size={22} color='#555' />
+            </TouchableOpacity>
+            <Text style={styles.topText}>숙명인 인증</Text>
             <View>
                 <Text style={styles.title}>
                     안전한 커뮤니티 이용을 위해 숙명인 인증을 실시하고 있습니다. 헤이영 또는 포털에서 학사정보를 캡쳐해 등록해주세요. 인증은 최대 일주일이 걸릴 수 있으며 인증이 완료되기 전까지 커뮤니티 사용이 제한됩니다.
@@ -22,16 +28,6 @@ export default function MypageAuth() {
         </SafeAreaView>
     );
 };
-// const getPhotos = () => {
-//     try {
-//         const {edges} = CameraRoll.getPhotos({
-//             first: 10,
-//         });
-//         console.log('getPhoto Success', edges);
-//     } catch (error) {
-//         console.log('getPhoto Fail', error);
-//     }
-// }
 
 const ButtonContainer = styled.TouchableOpacity`
     background-color: #003087;
@@ -47,9 +43,21 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     title: {
-        fontSize: 20,
+        fontSize: 17,
         textAlign: 'center',
         marginVertical: 14,
-        marginHorizontal: 20
-    }
+        marginHorizontal: 25
+    },
+    backIcon: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: 20
+    },
+    topText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        paddingVertical: 20
+    },
 })
