@@ -27,8 +27,8 @@ export default function MainNavigator() {
             tabBarHideOnKeyboard: true
         }
     }
-    // if (context.user.token == null || context.user.token == '')
-    //     return <AuthNavigator/>
+    if (context.user.token == null || context.user.token == '')
+        return <AuthNavigator/>
     return <Tab.Navigator screenOptions={scOpt}>
         <Tab.Screen name='HomeNavigator' component={HomeNavigator} />
         <Tab.Screen name='TimetableNavigator' component={TimetableNavigator} />
