@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { Switch } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Octicons from 'react-native-vector-icons/Octicons';
 
-export default function MypageAlarm() {
+export default function MypageAlarm({navigation}) {
     const [isEnabled1, setIsEnabled1] = useState(false);
     const toggleSwitch1 = () => setIsEnabled1(previousState => !previousState);
 
@@ -18,6 +19,11 @@ export default function MypageAlarm() {
 
     return(
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}
+            style={styles.backIcon}>
+            <Octicons name='chevron-left' size={22} color='#555' />
+            </TouchableOpacity>
+            <Text style={styles.topText}>푸쉬 알림 설정</Text>
             <View style={styles.bigView}>
                 <View style={styles.titleView}>
                     <Text style={styles.bigText}>댓글 알림</Text>
@@ -25,9 +31,9 @@ export default function MypageAlarm() {
                     </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087'}}
-                        thumbColor={isEnabled1 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch1}
                         value={isEnabled1}
                     />
@@ -39,9 +45,9 @@ export default function MypageAlarm() {
                     </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087' }}
-                        thumbColor={isEnabled2 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch2}
                         value={isEnabled2}
                     />
@@ -53,9 +59,9 @@ export default function MypageAlarm() {
                 </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087'}}
-                        thumbColor={isEnabled3 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch3}
                         value={isEnabled3}
                     />
@@ -67,9 +73,9 @@ export default function MypageAlarm() {
                     </View>
                     <Switch
                         style={styles.switch}
-                        trackColor={{ false: "#767577", true: '#003087' }}
-                        thumbColor={isEnabled4 ? "#f4f3f4" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
+                        trackColor={{ false: "#adadad", true: '#003087'}}
+                        thumbColor={isEnabled1 ? "#ffffff" : "#ffffff"}
+                        ios_backgroundColor="#bdbdbd"
                         onValueChange={toggleSwitch4}
                         value={isEnabled4}
                     />
@@ -91,13 +97,25 @@ const styles = StyleSheet.create ({
     },
     bigText: {
         fontWeight: 'bold',
-        fontSize: 25,
+        fontSize: 17,
         paddingBottom: 10,
     },
     smallText: {
-        fontSize: 17,
+        fontSize: 13,
     },
     switch: {
         flexDirection: 'row-reverse',
+    },
+    backIcon: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: 20
+    },
+    topText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        alignSelf: 'center',
+        paddingVertical: 20
     },
 });
