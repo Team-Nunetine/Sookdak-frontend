@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
+import BoardCreation from './BoardCreation'
 import BoardSearch from './BoardSearch'
 import FavoritesEdit from './FavoritesEdit'
 import HomeMain from './HomeMain'
@@ -43,6 +44,7 @@ function FavoritesStack() {
         screenOptions={{ headerShown: false, animationEnabled: false }}>
         <Stack.Screen name='FavoritesEdit' component={FavoritesEdit} />
         <Stack.Screen name='BoardSearch' component={BoardSearch} />
+        <Stack.Screen name='BoardCreation' component={BoardCreation} />
     </Stack.Navigator>
 }
 
@@ -59,14 +61,14 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                 </Text>
             </TouchableOpacity>
         </View>
-        {boards.map((v, i) => <DrawerItem label={v} key={i}
+        {boards.map((v, i) => <DrawerItem label={v.boardName} key={i}
             focused={currentBoard == i}
             activeTintColor='#003087'
             onPress={() => {
                 setCurrentBoard(i)
                 props.navigation.navigate('PostStack', {
                     screen: 'PostList',
-                    params: { boardName: v }
+                    params: { boardName: v.boardName }
                 })
             }} />
         )}
