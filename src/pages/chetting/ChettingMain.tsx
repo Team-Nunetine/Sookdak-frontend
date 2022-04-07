@@ -4,6 +4,8 @@ import { TextInput } from 'react-native-gesture-handler';
 import { Title } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
+import { color } from 'react-native-elements/dist/helpers';
+import { colors } from 'react-native-elements';
 
 export default function ChettingMain(navigation) {
     const ListTab = [
@@ -111,10 +113,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     title: {
-        fontSize: 20,
-        fontWeight: '600',
+        fontSize: 16,
+        fontWeight: 'bold',
         alignSelf: 'center',
-        margin: 20,
+        paddingVertical: 20,
+        color: '#003087',
     },
     textInput: {
         width: '100%',

@@ -22,32 +22,33 @@ const LoginPage = ({navigation}: {navigation: any}) => {
     let refreshToken;
 
     const signIn = () => {
-        GoogleSignin.signIn().then((res) => {
-            console.log(res.user.givenName, res.user.email)
-            rootContext.setUser({token: res.idToken, username: res.user.name});
+        GoogleSignin.signIn().then((googleRes) => {
+        //     console.log(res.user.givenName, res.user.email)
+        //     rootContext.setUser({token: res.idToken, username: res.user.name});
             axios.post('http://52.78.202.206:8080/api/user/login', {
-                email: res.user.email
+                email: googleRes.user.email
             })
             .then(function (res) {
                 accessToken = res.data.data.accessToken;
-                console.log(accessToken)
+                console.log('accessToken: ' + accessToken)
                 refreshToken = res.data.data.refreshToken;
+                rootContext.setUser({token: res.data.data.accessToken, username: googleRes.user.name});
             })
             .catch(function(error) {
                 console.log(error);
             });
             
-            axios.get('http://52.78.202.206:8080/api/user/me', {
-                headers: {
-                    authorization: `Bearer ${accessToken}`,
-                }
-            })
-            .then(function (res) {
-                console.log(res)
-            })
-            .catch(function (err) {
-                console.log("왜 에러일까",err)
-            })
+            // axios.get('http://52.78.202.206:8080/api/user/me', {
+            //     headers: {
+            //         authorization: `Bearer ${accessToken}`,
+            //     }
+            // })
+            // .then(function (res) {
+            //     console.log(res)
+            // })
+            // .catch(function (err) {
+            //     console.log("왜 에러일까",err)
+            // })
         }).catch((err) => {
             console.log(err)
         });
