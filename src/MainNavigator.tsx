@@ -3,7 +3,6 @@ import AuthNavigator from './pages/auth/AuthNavigator'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useRootContext } from './RootProvider'
 import { ParamListBase, RouteProp } from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import HomeNavigator from './pages/home/HomeNavigator'
 import ChettingNavigator from './pages/chetting/ChettingNavigator'
@@ -19,8 +18,8 @@ export default function MainNavigator() {
             tabBarIcon: ({ focused }: { focused: boolean }) => {
                 const { name } = route
                 return <Ionicons name={foo[name] + (focused ? '' : '-outline')}
-                        size={focused ? 27 : 22}
-                        color={focused ? '#003087' : '#151515'} />
+                    size={focused ? 27 : 22}
+                    color={focused ? '#003087' : '#151515'} />
             },
             tabBarActiveTintColor: '#003087',
             tabBarShowLabel: false,
@@ -28,9 +27,13 @@ export default function MainNavigator() {
         }
     }
     if (context.user.token == null || context.user.token == '')
-        return <AuthNavigator/>
+        return <AuthNavigator />
     return <Tab.Navigator screenOptions={scOpt}>
-        <Tab.Screen name='HomeNavigator' component={HomeNavigator} />
+        <Tab.Screen name='HomeNavigator' component={HomeNavigator}
+            listeners={({ navigation }) => ({
+                tabPress: e => navigation.navigate('HomeNavigator',
+                    { screen: 'PostStack', params: { screen: 'HomeMain' } })
+            })} />
         <Tab.Screen name='TimetableNavigator' component={TimetableNavigator} />
         <Tab.Screen name='ChettingNavigator' component={ChettingNavigator} />
         <Tab.Screen name='MypageNavigator' component={MypageNavigator} />
