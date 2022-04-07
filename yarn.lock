@@ -1156,6 +1156,13 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
+"@react-native-async-storage/async-storage@^1.17.3":
+  "integrity" "sha512-2dxdlGwBjBP2qYu6F72U7cRRFshISYiNEWCaQNOJtxUERCMaYRWcniYqhL248KSbGUMpRhFCEtliztsiGoYYMA=="
+  "resolved" "https://registry.npmjs.org/@react-native-async-storage/async-storage/-/async-storage-1.17.3.tgz"
+  "version" "1.17.3"
+  dependencies:
+    "merge-options" "^3.0.4"
+
 "@react-native-community/cameraroll@^4.1.2":
   "integrity" "sha512-jkdhMByMKD2CZ/5MPeBieYn8vkCfC4MOTouPpBpps3I8N6HUYJk+1JnDdktVYl2WINnqXpQptDA2YptVyifYAg=="
   "resolved" "https://registry.npmjs.org/@react-native-community/cameraroll/-/cameraroll-4.1.2.tgz"
@@ -3590,6 +3597,17 @@
   "resolved" "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.9.tgz"
   "version" "1.14.9"
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+"fontfaceobserver@^2.1.0":
+  "integrity" "sha512-ReOsO2F66jUa0jmv2nlM/s1MiutJx/srhAe2+TE8dJCMi02ZZOcCTxTCQFr3Yet+uODUtnr4Mewg+tNQ+4V1Ng=="
+  "resolved" "https://registry.npmjs.org/fontfaceobserver/-/fontfaceobserver-2.1.0.tgz"
+  "version" "2.1.0"
+
+>>>>>>> 037c616b4c1eb69dcb37555f09bcbf8462fcbf8d
+>>>>>>> 2aa68ca6b68394c107f89b1e2621f495b38d0269
 "for-in@^1.0.2":
   "integrity" "sha1-gQaNKVqBQuwKxybG4iAMMPttXoA="
   "resolved" "https://registry.npmjs.org/for-in/-/for-in-1.0.2.tgz"
@@ -4197,6 +4215,11 @@
   "integrity" "sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng=="
   "resolved" "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz"
   "version" "7.0.0"
+
+"is-plain-obj@^2.1.0":
+  "integrity" "sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA=="
+  "resolved" "https://registry.npmjs.org/is-plain-obj/-/is-plain-obj-2.1.0.tgz"
+  "version" "2.1.0"
 
 "is-plain-object@^2.0.3", "is-plain-object@^2.0.4":
   "integrity" "sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og=="
@@ -5105,6 +5128,25 @@
   dependencies:
     "object-visit" "^1.0.0"
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+"merge-options@^3.0.4":
+  "integrity" "sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ=="
+  "resolved" "https://registry.npmjs.org/merge-options/-/merge-options-3.0.4.tgz"
+  "version" "3.0.4"
+  dependencies:
+    "is-plain-obj" "^2.1.0"
+=======
+"md5-file@^3.2.3":
+  "integrity" "sha512-3Tkp1piAHaworfcCgH0jKbTvj1jWWFgbvh2cXaNCgHwyTCBxxvD1Y04rmfpvdPm1P4oXMOpm6+2H7sr7v9v8Fw=="
+  "resolved" "https://registry.npmjs.org/md5-file/-/md5-file-3.2.3.tgz"
+  "version" "3.2.3"
+  dependencies:
+    "buffer-alloc" "^1.1.0"
+>>>>>>> 037c616b4c1eb69dcb37555f09bcbf8462fcbf8d
+
+>>>>>>> 2aa68ca6b68394c107f89b1e2621f495b38d0269
 "merge-stream@^2.0.0":
   "integrity" "sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w=="
   "resolved" "https://registry.npmjs.org/merge-stream/-/merge-stream-2.0.0.tgz"
@@ -6190,7 +6232,11 @@
     "react-native-ratings" "8.0.4"
     "react-native-size-matters" "^0.3.1"
 
+<<<<<<< HEAD
 "react-native-gesture-handler@^2.3.1":
+=======
+"react-native-gesture-handler@^2.3.1", "react-native-gesture-handler@>= 1.0.0", "react-native-gesture-handler@>=1.10.0":
+>>>>>>> 2aa68ca6b68394c107f89b1e2621f495b38d0269
   "integrity" "sha512-Yq7cov7BMX9CTZ9oEIc6iX/XWgU5i88zSky7Vaq7deRQTq2s1REH4Idh0APEFLdHFWN/NKZMkHBRT7vaQAgvqg=="
   "resolved" "https://registry.npmjs.org/react-native-gesture-handler/-/react-native-gesture-handler-2.3.1.tgz"
   "version" "2.3.1"
@@ -6230,10 +6276,21 @@
   dependencies:
     "lodash" "^4.17.15"
 
+<<<<<<< HEAD
 "react-native-reanimated@^1.13.4":
+=======
+<<<<<<< HEAD
+"react-native-reanimated@^1.13.3", "react-native-reanimated@>= 1.0.0", "react-native-reanimated@>=2.2.0":
+  "integrity" "sha512-i714H24dv6ncpFO7/SZ0PfAMbvjgVbF8Ow2NPtowoZAz8osS54DmTMrkgJ9Za+uEku/s0AEaxqiXG2Xgntvv2g=="
+  "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-1.13.3.tgz"
+  "version" "1.13.3"
+=======
+"react-native-reanimated@^1.13.4", "react-native-reanimated@>= 1.0.0":
+>>>>>>> 2aa68ca6b68394c107f89b1e2621f495b38d0269
   "integrity" "sha512-sFbZFh0WanKTa0Fz7GXCZUjWpk/u04ytprcIs4Kb+ijfQHChXva3m3yQZfvbrhRbABJNHrdeuyDgJxDM2mcBgw=="
   "resolved" "https://registry.npmjs.org/react-native-reanimated/-/react-native-reanimated-1.13.4.tgz"
   "version" "1.13.4"
+>>>>>>> 037c616b4c1eb69dcb37555f09bcbf8462fcbf8d
   dependencies:
     "fbjs" "^1.0.0"
 
@@ -6263,7 +6320,11 @@
     "prop-types" "^15.7.2"
     "yargs" "^16.1.1"
 
+<<<<<<< HEAD
 "react-native@0.67.3":
+=======
+"react-native@*", "react-native@^0.0.0-0 || 0.60 - 0.68 || 1000.0.0", "react-native@>= 0.62", "react-native@>=0.42.0", "react-native@>=0.48.4", "react-native@>=0.57", "react-native@>=0.60", "react-native@>=0.64.0", "react-native@0.67.3":
+>>>>>>> 2aa68ca6b68394c107f89b1e2621f495b38d0269
   "integrity" "sha512-epMVRMRH7dLCis97+YwiV4dmTVZO6qKmQgwcTNcxVt/kEMxAa+OYK7h81+99/n7XCeMFk/U2zYOBuQqc7c5Amg=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.67.3.tgz"
   "version" "0.67.3"
