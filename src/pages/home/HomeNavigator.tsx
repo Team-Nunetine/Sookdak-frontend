@@ -9,6 +9,7 @@ import BoardSearch from './BoardSearch'
 import FavoritesEdit from './FavoritesEdit'
 import HomeMain from './HomeMain'
 import { HomeProvider, useHomeContext } from './HomeProvider'
+import Notice from './Notice'
 import PostDetail from './PostDetail'
 import PostList from './PostList'
 import PostSearch from './PostSearch'
@@ -25,6 +26,7 @@ export default function HomeNavigator() {
             (PostDetail에서 뒤로가기하면 PostList 뜨는 문제) 해결됨 */}
             <Drawer.Screen name='PostStack' component={PostStack} />
             <Drawer.Screen name='FavoritesStack' component={FavoritesStack} />
+            <Drawer.Screen name='NoticeStack' component={NoticeStack} />
         </Drawer.Navigator>
     </HomeProvider>
 }
@@ -51,6 +53,14 @@ function FavoritesStack() {
         <Stack.Screen name='BoardCreation' component={BoardCreation} />
         <Stack.Screen name='BoardPreview' component={BoardPreview} />
         <Stack.Screen name='PostDetailInFavoritesStack' component={PostDetail} />
+    </Stack.Navigator>
+}
+
+function NoticeStack() {
+    const Stack = createStackNavigator()
+    return <Stack.Navigator
+        screenOptions={{ headerShown: false, animationEnabled: false }}>
+        <Stack.Screen name='Notice' component={Notice} />
     </Stack.Navigator>
 }
 
