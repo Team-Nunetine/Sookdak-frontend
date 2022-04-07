@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AuthNavigator from './pages/auth/AuthNavigator'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useRootContext } from './RootProvider'
@@ -8,6 +8,7 @@ import HomeNavigator from './pages/home/HomeNavigator'
 import ChettingNavigator from './pages/chetting/ChettingNavigator'
 import TimetableNavigator from './pages/timetable/TimetableNavigator'
 import MypageNavigator from './pages/mypage/MypageNavigator'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function MainNavigator() {
     const context = useRootContext()
@@ -26,6 +27,17 @@ export default function MainNavigator() {
             tabBarHideOnKeyboard: true
         }
     }
+
+    useEffect(() => {
+        AsyncStorage.getItem('accessToken', (err, result) => {
+            context.setUser((prev) => {
+                const next = JSON.parse(JSON.stringify(prev))
+                next.token = result
+                return next
+            })
+        })
+    }, [])
+
     if (context.user.token == null || context.user.token == '')
         return <AuthNavigator />
     return <Tab.Navigator screenOptions={scOpt}>

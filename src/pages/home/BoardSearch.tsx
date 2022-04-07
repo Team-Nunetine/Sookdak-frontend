@@ -22,16 +22,12 @@ export default function BoardSearch({ navigation }) {
     useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
-        axios.get('http://52.78.202.206:8080/api/board', {
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": 'Bearer ' + rootContext.user.token
-            }
-        }).then((res) => {
-            setAllBoards(res.data.data.boards)
-            setResult(res.data.data.boards)
-            console.log('called')
-        }).catch((err) => console.log(err))
+        rootContext.api.get('/api/board')
+            .then((res) => {
+                setAllBoards(res.data.data.boards)
+                setResult(res.data.data.boards)
+                console.log('called')
+            }).catch((err) => console.log(err))
     }, []))
 
     const onChange = ({ nativeEvent }) => {
