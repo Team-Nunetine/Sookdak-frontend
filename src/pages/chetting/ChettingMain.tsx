@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView, View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { Title } from 'react-native-paper';
@@ -18,34 +18,58 @@ export default function ChettingMain({ route, navigation }) {
         {
             roomName: '시스템종합설계',
             chat: '팀원 구해요',
-            people: '22'
+            people: '22',
+            status: 'MY'
         },
         {
             roomName: '데이터마이닝분석',
             chat: '안녕하세요',
-            people: '25'
+            people: '25',
+            status: 'MY'
         },
         {
             roomName: '융합적사고와글쓰기',
             chat: '과제 있나요',
-            people: '17'
+            people: '17',
+            status: 'MY'
         },
         {
             roomName: '소프트웨어융합특강',
             chat: '같이 공부 할 사람 구해요',
-            people: '16'
+            people: '16',
+            status: 'MY'
+        },
+        {
+            roomName: '데이터사이언스개론',
+            chat: '이번 강의 어렵네요',
+            people: '16',
+            status: '전체'
+        },
+        {
+            roomName: '데이터베이스프로그래밍',
+            chat: '과제가 너무 많아요',
+            people: '23',
+            status: '전체'
         },
     ]
     const [status, setStatus] = useState('MY')
     const [datalist, setDatalist] = useState(data)
-    const [result, setResult] = useState<any>([])
+    
     const setStatusFilter = status => { //status는 listTab.tabname
-        if(status !== 'MY') {
-            setDatalist([...data.filter(v => v.roomName === status)])
-        } else { //status === 'MY'
-            setDatalist(data)
+        if( status === 'MY') {
+            setDatalist([...data.filter(v => v.status === status)])
+        } else {
+            setDatalist([...data.filter(v => v.status === status)])
         }
         setStatus(status)
+    }
+
+    const searchRoom = (input) => {
+        let data = datalist
+        let searchData = data.filter((item) => {
+            return item.roomName.includes(input)
+        });
+        setDatalist(searchData)
     }
 
     const renderItem = ({item, index}) => {
@@ -69,22 +93,10 @@ export default function ChettingMain({ route, navigation }) {
                 <View/>
                 <Title style={styles.title}>대화</Title>
                     <TouchableOpacity
-                    onPress={() => {}}>
+                    onPress={() => {navigation.navigate('ChattingStart')}}>
                         <Ionicons style={styles.icon}name='add-circle-outline' size={28} color='#555' />
                     </TouchableOpacity>
             </View>
-            <View style={styles.textInputRow}>
-                <TextInput style={styles.textSearch} onEndEditing={() => onPressSearch(setResult)} />
-                <TouchableOpacity onPress={() => onPressSearch(setResult)}>
-                    <Ionicons name='search' size={25} color='#555' />
-                </TouchableOpacity>
-            </View>
-            {/* <FlatList
-                data={result}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                contentContainerStyle={{ paddingHorizontal: 20 }}
-            /> */}
             <View style={styles.listTab}>
                 {
                     ListTab.map(v => (
@@ -96,7 +108,17 @@ export default function ChettingMain({ route, navigation }) {
                     ))
                 }
             </View>
-            
+            <View style={styles.textInputRow}>
+                <TouchableOpacity>
+                    <Ionicons name='search' size={25} color='#555' />
+                </TouchableOpacity>
+                <TextInput
+                 placeholder='채팅방 검색'
+                 onChangeText={(input) => {
+                     searchRoom(input)
+                 }}/>
+            </View>
+
             <FlatList
              data = {datalist}
              keyExtractor={(item) => item.toString()}
@@ -106,14 +128,6 @@ export default function ChettingMain({ route, navigation }) {
     
     )}
 
-function onPressSearch(setResult) {
-    setResult([{
-        id: '1',
-        roomName: '시스템종합설계',
-        chat: '팀원 구해요',
-        people: '22'
-    }])
-}
 const styles = StyleSheet.create({
     container: {
         flex: 1,
