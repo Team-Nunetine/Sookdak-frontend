@@ -9,6 +9,8 @@ import MypageWithdrawal from './MypageWithdrawal'
 import MypageMywriting from './MypageMywriting'
 import MypageMycmt from './MypageMycmt'
 import MypageAlarm from './MypageAlarm'
+import MypageScrap from './MypageScrap'
+import MypageBoard from './MypageBoard'
 
 export default function MypageNavigator() {
     const Stack = createStackNavigator()
@@ -20,5 +22,7 @@ export default function MypageNavigator() {
         <Stack.Screen name='MypageMywriting' component={MypageMywriting} options={{ headerShown: false }}/>
         <Stack.Screen name='MypageMycmt' component={MypageMycmt} options={{ headerShown: false }}/>
         <Stack.Screen name='MypageAlarm' component={MypageAlarm} options={{ headerShown: false }}/>
+        <Stack.Screen name='MypageScrap' component={MypageScrap} options={{ headerShown: false }}/>
+        <Stack.Screen name='MypageBoard' component={MypageBoard} options={{ headerShown: false }}/>
     </Stack.Navigator>
 }
