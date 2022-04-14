@@ -33,6 +33,14 @@ export default function MypageMain({navigation}: {navigation: any}) {
                 {
                     content: "내가 쓴 댓글",
                     screen: 'MypageMycmt'
+                },
+                {
+                    content: "스크랩",
+                    screen: 'MypageScrap'
+                },
+                {
+                    content: "게시판 관리",
+                    screen: 'MypageBoard'
                 }
             ]
         },
