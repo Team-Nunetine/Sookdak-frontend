@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Alert, ViewBase } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default function ChattingStart({ route, navigation }) {
 
-    const [text, setTitle] = useState('');
+    const [title, setTitle] = useState('');
+    const [desc, setDesc] = useState('')
 
     return <SafeAreaView style={styles.topContainer}>
         <TouchableOpacity
@@ -15,16 +16,26 @@ export default function ChattingStart({ route, navigation }) {
         <Text style={styles.topText}>새로운 대화를 시작해보세요.</Text>
         <View style={styles.container}>
             <Text style={styles.roomName}>채팅방 이름</Text>
-            <TextInput style={styles.textInput}></TextInput>
+            <TextInput 
+             style={styles.textInput}
+             onChangeText={(title) => setTitle(title)}
+            />
+            <Text style={styles.text}>0/30</Text>
         </View>
         <View style={styles.container}>
             <Text style={styles.roomName}>채팅방 소개</Text>
             <TextInput 
              style={styles.textInput}
-             onChangeText={(text) => setTitle(text)}
+             onChangeText={(desc) => setTitle(desc)}
              />
+             <Text style={styles.text}>0/30</Text>
         </View>
-        <Button title="개설" onPress={navigation.navigate({})}></Button>
+        <View style={styles.button}>
+        <Button
+         title="개설" 
+         color={'black'}
+         onPress={() => navigation.navigate('ChattingRoom', {roomName: title})}></Button>
+         </View>
     </SafeAreaView>
 };
 
@@ -45,21 +56,39 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         paddingBottom: 20,
         paddingTop: 25,
-        paddingHorizontal: 20
+        paddingHorizontal: 30
     },
     textInput: {
         width: 300,
-        height: 40,
+        height: 45,
         marginTop: 20,
         paddingVertical: 10,
-        paddingHorizontal: 15,
+        paddingHorizontal: 10,
         borderColor: '#ccc',
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderRadius: 15, 
         fontSize: 16,
+        color: '#fff'
+    },
+    text: {
+        textAlign: 'right',
+        color: 'white',
+        marginTop: 5,
+        fontSize: 13,
     },
     roomName: {
         fontSize: 20,
         color: '#fff'
     },
+    button: {
+        width: 300,
+        height: 45,
+        backgroundColor: '#fff',
+        textAlign: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        marginTop: 20,
+        borderWidth: 1,
+        borderRadius: 13,
+    }
 });
