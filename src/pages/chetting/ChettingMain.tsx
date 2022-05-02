@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { SafeAreaView, View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { Title } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default function ChettingMain({ route, navigation }) {
-    const ListTab = [
+    const listTab = [
         {
-            tabname: 'MY'
-        },
+            status: 'MY'
+        }, 
         {
-            tabname: '전체'
+            status: '전체'
         }
     ]
-
-    const data = [
+    
+    const Data = [
         {
             roomName: '시스템종합설계',
-            chat: '팀원 구해요',
+            chat: '팀원 구해요',                
             people: '22',
             status: 'MY'
         },
@@ -34,38 +34,32 @@ export default function ChettingMain({ route, navigation }) {
             status: 'MY'
         },
         {
-            roomName: '소프트웨어융합특강',
-            chat: '같이 공부 할 사람 구해요',
-            people: '16',
-            status: 'MY'
-        },
-        {
             roomName: '데이터사이언스개론',
             chat: '이번 강의 어렵네요',
-            people: '16',
-            status: '전체'
+            people: '16'
         },
         {
             roomName: '데이터베이스프로그래밍',
             chat: '과제가 너무 많아요',
-            people: '23',
-            status: '전체'
-        },
+            people: '23'
+        }
     ]
-    const [status, setStatus] = useState('MY')
-    const [datalist, setDatalist] = useState(data)
+
+
+    const [status, setStatus] = useState('전체')
+    const [Datalist, setDatalist] = useState(Data)
     
-    const setStatusFilter = status => { //status는 listTab.tabname
-        if( status === 'MY') {
-            setDatalist([...data.filter(v => v.status === status)])
+    const setStatusFilter = status => { 
+        if( status !== '전체') {
+            setDatalist([...Data.filter(v => v.status === status)])
         } else {
-            setDatalist([...data.filter(v => v.status === status)])
+            setDatalist(Data)
         }
         setStatus(status)
     }
 
     const searchRoom = (input) => {
-        let data = datalist
+        let data = Data
         let searchData = data.filter((item) => {
             return item.roomName.includes(input)
         });
@@ -92,18 +86,17 @@ export default function ChettingMain({ route, navigation }) {
             <View style={styles.iconContainer}>
                 <View/>
                 <Title style={styles.title}>대화</Title>
-                    <TouchableOpacity
-                    onPress={() => {navigation.navigate('ChattingStart')}}>
-                        <Ionicons style={styles.icon}name='add-circle-outline' size={28} color='#555' />
-                    </TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('ChattingStart')}>
+                    <Ionicons style={styles.icon} name='add-circle-outline' size={28} color='#555'/>
+                </TouchableOpacity>
             </View>
             <View style={styles.listTab}>
                 {
-                    ListTab.map(v => (
+                    listTab.map(v => (
                         <TouchableOpacity 
-                        style={[styles.btnTab, status === v.tabname && styles.btnTabActive]}
-                        onPress={() => setStatusFilter(v.tabname)}>
-                            <Text style={styles.textTab}>{v.tabname}</Text>
+                        style={[styles.btnTab, status === v.status && styles.btnTabActive]}
+                        onPress={() => setStatusFilter(v.status)}>
+                            <Text style={styles.textTab}>{v.status}</Text>
                         </TouchableOpacity>
                     ))
                 }
@@ -115,15 +108,16 @@ export default function ChettingMain({ route, navigation }) {
                 <TextInput
                  placeholder='채팅방 검색'
                  onChangeText={(input) => {
-                     searchRoom(input)
+                    searchRoom(input)
                  }}/>
             </View>
 
             <FlatList
-             data = {datalist}
+             data = {Datalist}
              keyExtractor={(item) => item.toString()}
              renderItem={renderItem}
             />
+
     </SafeAreaView>
     
     )}
@@ -141,7 +135,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 15
+        paddingHorizontal: 10
     },
     textSearch: {
         flex: 1,
@@ -150,8 +144,7 @@ const styles = StyleSheet.create({
     listTab: {
         padding: 5,
         flexDirection: 'row',
-        alignSelf: 'center', 
-        marginBottom: 20
+        alignSelf: 'center'
     },
     iconContainer: {
         flexDirection: 'row',
