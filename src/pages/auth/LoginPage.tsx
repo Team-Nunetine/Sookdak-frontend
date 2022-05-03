@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import { useRootContext } from '../../RootProvider';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginPage = ({navigation}: {navigation: any}) => {
 
@@ -23,8 +24,6 @@ const LoginPage = ({navigation}: {navigation: any}) => {
 
     const signIn = () => {
         GoogleSignin.signIn().then((googleRes) => {
-        //     console.log(res.user.givenName, res.user.email)
-        //     rootContext.setUser({token: res.idToken, username: res.user.name});
             axios.post('http://52.78.202.206:8080/api/user/login', {
                 email: googleRes.user.email
             })
@@ -33,6 +32,7 @@ const LoginPage = ({navigation}: {navigation: any}) => {
                 console.log('accessToken: ' + accessToken)
                 refreshToken = res.data.data.refreshToken;
                 rootContext.setUser({token: res.data.data.accessToken, username: googleRes.user.name});
+                AsyncStorage.setItem('accessToken', res.data.data.accessToken)
             })
             .catch(function(error) {
                 console.log(error);
