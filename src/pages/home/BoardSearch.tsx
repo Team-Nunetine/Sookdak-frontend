@@ -20,14 +20,12 @@ export default function BoardSearch({ navigation }) {
     const rootContext = useRootContext()
 
     useFocusEffect(useCallback(() => {
-        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
-        navigation.getParent().setOptions({ swipeEnabled: false })
-        rootContext.api.get('/api/board')
-            .then((res) => {
-                setAllBoards(res.data.data.boards)
-                setResult(res.data.data.boards)
-                console.log('called')
-            }).catch((err) => console.log(err))
+        // rootContext.api.get('/api/board')
+        //     .then((res) => {
+        //         setAllBoards(res.data.data.boards)
+        //         setResult(res.data.data.boards)
+        //         console.log('called')
+        //     }).catch((err) => console.log(err))
     }, []))
 
     const onChange = ({ nativeEvent }) => {

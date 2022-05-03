@@ -9,6 +9,8 @@ import BoardSearch from './BoardSearch'
 import FavoritesEdit from './FavoritesEdit'
 import HomeMain from './HomeMain'
 import { HomeProvider, useHomeContext } from './HomeProvider'
+import MessageDetail from './MessageDetail'
+import MessageSend from './MessageSend'
 import Notice from './Notice'
 import PostDetail from './PostDetail'
 import PostList from './PostList'
@@ -61,6 +63,8 @@ function NoticeStack() {
     return <Stack.Navigator
         screenOptions={{ headerShown: false, animationEnabled: false }}>
         <Stack.Screen name='Notice' component={Notice} />
+        <Stack.Screen name='MessageDetail' component={MessageDetail} />
+        <Stack.Screen name='MessageSend' component={MessageSend} />
     </Stack.Navigator>
 }
 
