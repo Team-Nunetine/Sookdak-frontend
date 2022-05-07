@@ -17,30 +17,30 @@ export default function ChettingMain({ route, navigation }) {
     const Data = [
         {
             roomName: '시스템종합설계',
-            chat: '팀원 구해요',                
+            desc: '시스템종합설계 방입니다.',                
             people: '22',
             status: 'MY'
         },
         {
             roomName: '데이터마이닝분석',
-            chat: '안녕하세요',
+            desc: '데이터마이닝및분석 방입니다.',
             people: '25',
             status: 'MY'
         },
         {
             roomName: '융합적사고와글쓰기',
-            chat: '과제 있나요',
+            desc: '융사글 방입니다.',
             people: '17',
             status: 'MY'
         },
         {
             roomName: '데이터사이언스개론',
-            chat: '이번 강의 어렵네요',
+            desc: '데사개 방입니다.',
             people: '16'
         },
         {
             roomName: '데이터베이스프로그래밍',
-            chat: '과제가 너무 많아요',
+            desc: '데베프 방입니다.',
             people: '23'
         }
     ]
@@ -74,7 +74,7 @@ export default function ChettingMain({ route, navigation }) {
                      roomName: item.roomName})}}>
                 <View key={index} style={styles.itemContainer}>
                     <Text style={styles.roomName}>{item.roomName}</Text>
-                    <Text style={styles.chat}>{item.chat}</Text>
+                    <Text style={styles.desc}>{item.desc}</Text>
                     <Text style={styles.people}>{item.people}</Text>
                 </View>
             </TouchableOpacity>
@@ -102,14 +102,15 @@ export default function ChettingMain({ route, navigation }) {
                 }
             </View>
             <View style={styles.textInputRow}>
-                <TouchableOpacity>
-                    <Ionicons name='search' size={25} color='#555' />
-                </TouchableOpacity>
                 <TextInput
+                 style={styles.textInput}
                  placeholder='채팅방 검색'
                  onChangeText={(input) => {
                     searchRoom(input)
-                 }}/>
+                }}/>
+                <TouchableOpacity>
+                    <Ionicons name='search' size={25} color='#555' />
+                </TouchableOpacity>
             </View>
 
             <FlatList
@@ -127,19 +128,6 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 10,
         backgroundColor: '#fff'
-    },
-    textInputRow: {
-        backgroundColor: '#f5f5f5',
-        marginHorizontal: 20,
-        marginVertical: 10,
-        borderRadius: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 10
-    },
-    textSearch: {
-        flex: 1,
-        paddingVertical: 7
     },
     listTab: {
         padding: 5,
@@ -171,14 +159,18 @@ const styles = StyleSheet.create({
         left: 0,
         padding: 20
     },
-    textInput: {
-        width: '100%',
-        height: '60px',
-        margin: '3px 0',
-        padding: '15pt 20pt',
+    textInputRow: {
+        backgroundColor: '#f5f5f5',
+        marginHorizontal: 20,
+        marginVertical: 10,
         borderRadius: 10,
-        backgroundColor: '#e3e3e3' ,
-        fontSize: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15
+    },
+    textInput: {
+        flex: 1,
+        paddingVertical: 7
     },
     textTab: {
         fontSize: 16
@@ -199,7 +191,7 @@ const styles = StyleSheet.create({
         color: '#003087',
         fontSize: 17,
     },
-    chat: {
+    desc: {
         fontSize: 15,
         marginTop: 8
     },

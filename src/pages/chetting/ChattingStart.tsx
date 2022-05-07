@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Alert, ViewBase } from "react-native";
+import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
@@ -7,6 +7,13 @@ export default function ChattingStart({ route, navigation }) {
 
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('')
+
+    function roomNavigate({title, desc}) {
+        if(title == "") 
+            return Alert.alert('채팅방 이름을 입력해주세요.')
+        else
+            return navigation.navigate('ChattingRoom', {roomName: title})
+    }
 
     return <SafeAreaView style={styles.topContainer}>
         <TouchableOpacity
@@ -34,7 +41,7 @@ export default function ChattingStart({ route, navigation }) {
         <Button
          title="개설" 
          color={'black'}
-         onPress={() => navigation.navigate('ChattingRoom', {roomName: title})}></Button>
+         onPress={() => roomNavigate({title, desc})}></Button>
          </View>
     </SafeAreaView>
 };
