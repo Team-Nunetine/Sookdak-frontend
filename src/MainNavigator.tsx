@@ -29,11 +29,31 @@ export default function MainNavigator() {
     }
 
     useEffect(() => {
-        AsyncStorage.getItem('accessToken', (err, result) => {
-            context.setUser((prev) => {
-                const next = JSON.parse(JSON.stringify(prev))
-                next.token = result
-                return next
+        AsyncStorage.getItem('accessToken', (err, accessToken) => {
+            AsyncStorage.getItem('refreshToken', (err, refreshToken) => {
+                if (accessToken && accessToken.length > 0)
+                    context.api.post('/api/user/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                        .then((res) => {
+                            AsyncStorage.setItem('accessToken', res.data.data.accessToken)
+                            AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
+                            context.setUser((prev) => {
+                                const next = JSON.parse(JSON.stringify(prev))
+                                next.token = accessToken
+                                return next
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            accessToken = ''
+                            context.setUser((prev) => {
+                                const next = JSON.parse(JSON.stringify(prev))
+                                next.token = ''
+                                return next
+                            })
+                        })
             })
         })
     }, [])
