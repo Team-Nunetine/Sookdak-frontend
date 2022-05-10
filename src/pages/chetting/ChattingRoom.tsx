@@ -1,9 +1,21 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Send } from 'react-native-gifted-chat';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default function ChattingRoom({route, navigation}) {
+    const list = [
+        {
+            idx: 0,
+            title: '체팅방 나가기'
+        },
+        {
+            idx: 1,
+            title: '알림'
+        }
+    ]
+
     const MOCK_MESSAGES = [
         {
           _id: 1,
@@ -12,7 +24,7 @@ export default function ChattingRoom({route, navigation}) {
           user: {
             _id: 2,
             name: '익명',
-            avatar: 'https://www.sookmyung.ac.kr/sites/sookmyungkr/images/sub/contents/trade_character_05.png',
+            avatar: 'https://i.ibb.co/kQ7JTW4/Kakao-Talk-Photo-2022-05-10-14-35-48.png'
           },
         },
       ];
@@ -22,7 +34,7 @@ export default function ChattingRoom({route, navigation}) {
 
     const user = {
         _id: name,
-        avatar: 'https://www.sookmyung.ac.kr/sites/sookmyungkr/images/sub/contents/trade_character_05.png'
+        avatar: 'https://i.ibb.co/kQ7JTW4/Kakao-Talk-Photo-2022-05-10-14-35-48.png'
     };
 
     const onSend = newMessages => {
@@ -33,6 +45,19 @@ export default function ChattingRoom({route, navigation}) {
     //     let data = 
     // }
 
+    const renderSend = (props) => {
+        return (
+            <Send{...props}>
+                <View>
+                    <MaterialCommunityIcons 
+                     name='send-circle' 
+                    size={32} 
+                    style={{marginBottom: 6, marginRight: 5}}
+                    color='#2e64e5'/>
+                </View> 
+            </Send>
+        )
+    }
     
     return(
         <SafeAreaView style={styles.container}>
@@ -64,6 +89,8 @@ export default function ChattingRoom({route, navigation}) {
                 onSend={newMessage => onSend(newMessage)}
                 user={user}
                 renderUsernameOnMessage
+                alwaysShowSend
+                renderSend={renderSend}
                 />
             </View>
         </SafeAreaView>
@@ -86,6 +113,10 @@ const styles = StyleSheet.create({
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center'
+    },
+    list: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     textInputRow: {
         backgroundColor: '#f5f5f5',
