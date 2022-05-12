@@ -1,10 +1,13 @@
+import { useFocusEffect } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default function ChattingStart({ route, navigation }) {
-
+    useFocusEffect(() => {
+        return navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+    })
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('')
 

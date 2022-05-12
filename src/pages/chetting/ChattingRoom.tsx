@@ -3,19 +3,12 @@ import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput} from
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { GiftedChat, Send } from 'react-native-gifted-chat';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { DrawerActions, useFocusEffect } from "@react-navigation/native";
 
 export default function ChattingRoom({route, navigation}) {
-    const list = [
-        {
-            idx: 0,
-            title: '체팅방 나가기'
-        },
-        {
-            idx: 1,
-            title: '알림'
-        }
-    ]
-
+    useFocusEffect(() => {
+        return navigation.getParent().setOptions({ tabBarStyle: { display: 'none' } })
+    })
     const MOCK_MESSAGES = [
         {
           _id: 1,
@@ -42,7 +35,10 @@ export default function ChattingRoom({route, navigation}) {
       };
 
     // const searchRoom = (input) => {
-    //     let data = 
+    //     let data = message
+    //     let searchData = data.filter((item) => {
+    //         return item.text.includes(input)
+    //     });
     // }
 
     const renderSend = (props) => {
@@ -58,7 +54,7 @@ export default function ChattingRoom({route, navigation}) {
             </Send>
         )
     }
-    
+        
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.topView}>
@@ -68,7 +64,7 @@ export default function ChattingRoom({route, navigation}) {
             </TouchableOpacity>
             <Text style={styles.topText}>{route.params.roomName}</Text>
             <TouchableOpacity
-            onPress={() => {}}>
+            onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
                 <Ionicons name="ellipsis-vertical-outline" size={30}></Ionicons>
             </TouchableOpacity>
             </View>
