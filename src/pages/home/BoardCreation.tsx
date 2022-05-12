@@ -22,16 +22,10 @@ export default function BoardCreation({ navigation }) {
             {
                 text: '확인',
                 onPress: () => {
-                    axios.post('http://52.78.202.206:8080/api/board/save',
+                    rootContext.api.post('/api/board/save',
                         {
                             name: name,
                             description: description
-                        },
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": 'Bearer ' + rootContext.user.token
-                            }
                         }
                     ).then((res) => {
                         navigation.pop(2)

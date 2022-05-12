@@ -4,87 +4,40 @@ import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } fr
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import { useHomeContext } from './HomeProvider'
+import { useRootContext } from '../../RootProvider'
+
+type DataType = {
+    boardId: number,
+    boardName: string,
+    postList: {
+        postId: number,
+        content: string,
+        createdAt: string,
+        likes: number,
+        comments: number,
+        image: boolean
+    }[],
+}[]
 
 export default function HomeMain({ navigation, route }) {
-    
+    const [data, setData] = useState<DataType>([])
+    const { setCurrentBoard } = useHomeContext()
+    const rootContext = useRootContext()
+    const homeContext = useHomeContext()
     useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
         navigation.getParent().setOptions({ swipeEnabled: true })
         setCurrentBoard(-1)
-    },[]))
-    
-    const [data, setData] = useState([
-        {
-            title: '숙플레이스',
-            contentList: [
-                {
-                    content: '숙플 게시글 내용1\n최대\n3줄까지\n보여지기',
-                    likeCount: 10,
-                    commentCount: 2,
-                    image: true
-                },
-                {
-                    content: '숙플 게시글 내용2',
-                    likeCount: 9,
-                    commentCount: 1,
-                    image: false
-                },
-                {
-                    content: '숙플 게시글 내용3',
-                    likeCount: 8,
-                    commentCount: 0,
-                    image: true
-                }
-            ]
-        },
-        {
-            title: '소융아이티컴과',
-            contentList: [
-                {
-                    content: '소아컴 게시글 내용1',
-                    likeCount: 10,
-                    commentCount: 2,
-                    image: true
-                },
-                {
-                    content: '소아컴 게시글 내용2',
-                    likeCount: 9,
-                    commentCount: 1,
-                    image: false
-                },
-                {
-                    content: '소아컴 게시글 내용3',
-                    likeCount: 8,
-                    commentCount: 0,
-                    image: true
-                }
-            ]
-        },
-        {
-            title: '홍보게시판',
-            contentList: [
-                {
-                    content: '홍보 게시글 내용1',
-                    likeCount: 10,
-                    commentCount: 2,
-                    image: true
-                },
-                {
-                    content: '홍보 게시글 내용2',
-                    likeCount: 9,
-                    commentCount: 1,
-                    image: false
-                },
-                {
-                    content: '홍보 게시글 내용3',
-                    likeCount: 8,
-                    commentCount: 0,
-                    image: true
-                }
-            ]
-        },
-    ])
-    const { setCurrentBoard } = useHomeContext()
+        rootContext.api.get('/api/home')
+            .then((res) => {
+                setData(res.data.data.stars)
+            })
+
+        rootContext.api.get('/api/star')
+            .then((res) => {
+                homeContext.setBoards(res.data.data.stars)
+            })
+    }, []))
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
             style={styles.menuIcon}>
@@ -102,26 +55,26 @@ export default function HomeMain({ navigation, route }) {
                         setCurrentBoard(i)
                         navigation.navigate('PostStack', {
                             screen: 'PostList',
-                            params: { boardName: v.title }
+                            params: { boardName: v.boardName, boardId: v.boardId }
                         })
                     }}>
-                    <Text style={styles.title}>{v.title}</Text>
+                    <Text style={styles.title}>{v.boardName}</Text>
                     <Ionicons name='chevron-forward' size={18} color='#003087' />
                 </TouchableOpacity>
-                {v.contentList.map((content, j) => <TouchableOpacity style={styles.contentView}
+                {v.postList.map((content, j) => <TouchableOpacity style={styles.contentView}
                     key={i + 'i' + j}
                     onPress={() => {
                         navigation.navigate('PostStack', {
                             screen: 'PostDetail',
-                            params: { boardName: v.title }
+                            params: { boardName: v.boardName, boardId: v.boardId }
                         })
                     }}>
                     <Text style={styles.content} numberOfLines={3}>{content.content}</Text>
                     <View style={styles.countView}>
                         <Ionicons name='heart-outline' size={12} color='#AD3E3E' />
-                        <Text style={[styles.count, { color: '#AD3E3E' }]}>{content.likeCount}</Text>
+                        <Text style={[styles.count, { color: '#AD3E3E' }]}>{content.likes}</Text>
                         <Ionicons name='chatbox-ellipses-outline' size={12} color='#003087' />
-                        <Text style={[styles.count, { color: '#003087' }]}>{content.commentCount}</Text>
+                        <Text style={[styles.count, { color: '#003087' }]}>{content.comments}</Text>
                         {content.image ?
                             <Feather name='paperclip' size={10} color='#333' />
                             : undefined}
