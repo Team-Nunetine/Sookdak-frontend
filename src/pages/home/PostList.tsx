@@ -16,7 +16,14 @@ type DataType = {
 }
 
 export default function PostList({ route, navigation }) {
-    const [data, setData] = useState<DataType[]>([])
+    const [data, setData] = useState<DataType[]>([{
+        postId: 10,
+        content: '로딩전',
+        createdAt: '1010',
+        likes: 1,
+        comments: 1,
+        image: true
+    }])
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -33,18 +40,20 @@ export default function PostList({ route, navigation }) {
                 setData(res.data.data.posts)
                 ++pageNumber
             })
+            .catch((err) => console.log(err.response.data))
     }, []))
 
     const onEndReached = () => {
-        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageNumber)
-            .then((res) => {
-                setData((prev) => {
-                    let next = [...prev]
-                    next.push(res.data.data.posts)
-                    return next
-                })
-                ++pageNumber
-            })
+        // rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageNumber)
+        //     .then((res) => {
+        //         console.log('onEndReached called')
+        //         setData((prev) => {
+        //             let next = [...prev]
+        //             next.push(res.data.data.posts)
+        //             return next
+        //         })
+        //         ++pageNumber
+        //     })
     }
 
     const renderItem = ({ item }: { item: DataType }) => <TouchableOpacity style={styles.contentView}

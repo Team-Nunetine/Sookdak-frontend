@@ -32,10 +32,18 @@ export default function HomeMain({ navigation, route }) {
             .then((res) => {
                 setData(res.data.data.stars)
             })
+            .catch((err) => {
+                console.log('HomeMain')
+                console.log(err.response.data)
+            })
 
         rootContext.api.get('/api/star')
             .then((res) => {
                 homeContext.setBoards(res.data.data.stars)
+            })
+            .catch((err) => {
+                console.log('HomeMain')
+                console.log(err.response.data)
             })
     }, []))
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>

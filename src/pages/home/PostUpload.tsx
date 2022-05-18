@@ -17,24 +17,24 @@ export default function PostUpload({ route, navigation }) {
                 },
                 {
                     text: '확인', onPress: () => {
-                        axios({
-                            url: 'http://52.78.202.206:8080/api/post/' + route.params.boardId + '/save',
-                            method: 'post',
+                        // axios.post('http://52.78.202.206:8080/api/post/' + route.params.boardId + '/save',
+                        //     new FormData(),//createFormData(photoList, text),
+                        //     {
+                        //         headers: {
+                        //             'Content-Type': 'multipart/form-data',
+                        //             'Authorization': 'Bearer ' + rootContext.user.token
+                        //         }
+                        //     }
+                        // )
+                        fetch('http://52.78.202.206:8080/api/post/' + route.params.boardId + '/save', {
+                            method: 'POST',
                             headers: {
                                 'Content-Type': 'multipart/form-data',
                                 'Authorization': 'Bearer ' + rootContext.user.token
                             },
-                            data: createFormData(photoList, text)
+                            body: createFormData(photoList, text),
                         })
-                        // .post('http://52.78.202.206:8080/api/post/' + route.params.boardId + '/save',
-                        //     createFormData(photoList, text),
-                        //     {
-                        //         headers: {
-                        //             'Content-Type': 'multipart/form-data',
-                        //             Authorization: 'Bearer ' + rootContext.user.token
-                        //         }
-                        //     }
-                        // )
+                            .then((response) => response.json())
                             .then((res) => {
                                 console.log('성공')
                                 console.log(res)
@@ -91,7 +91,10 @@ export default function PostUpload({ route, navigation }) {
 const createFormData = (photoList, text) => {
     let data = new FormData()
 
-    photoList.map((photo, i) => {
+    data.append('content', text)
+    // data.append('content', new Blob([JSON.stringify(text)], {type: "application/json"}))
+
+    photoList.map((photo) => {
         data.append('images', {
             name: photo.fileName,
             type: photo.type,
@@ -99,7 +102,9 @@ const createFormData = (photoList, text) => {
         })
     })
 
-    data.append('content', text)
+    // for(let [name, value] of data.entries()) {
+    //     console.log(`${name} = ${value}`); // key1 = value1, then key2 = value2
+    //   }
 
     return data
 }
