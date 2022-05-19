@@ -1,5 +1,5 @@
 import { DrawerActions, useFocusEffect } from '@react-navigation/native'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
@@ -16,14 +16,16 @@ type DataType = {
 }
 
 export default function PostList({ route, navigation }) {
-    const [data, setData] = useState<DataType[]>([{
-        postId: 10,
-        content: '로딩전',
-        createdAt: '1010',
-        likes: 1,
-        comments: 1,
-        image: true
-    }])
+    const [data, setData] = useState<DataType[]>([
+        //     {
+        //     postId: 10,
+        //     content: '로딩전',
+        //     createdAt: '1010',
+        //     likes: 1,
+        //     comments: 1,
+        //     image: true
+        // }
+    ])
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -32,28 +34,32 @@ export default function PostList({ route, navigation }) {
 
     const rootContext = useRootContext()
 
-    let pageNumber = 0
+    const [pageIndex, setPageIndex] = useState(0)
 
-    useFocusEffect(useCallback(() => {
-        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageNumber)
+    useEffect(useCallback(() => {
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
             .then((res) => {
+                console.log('useEffect')
                 setData(res.data.data.posts)
-                ++pageNumber
+                setPageIndex(1)
             })
             .catch((err) => console.log(err.response.data))
-    }, []))
+    }, []), [])
 
     const onEndReached = () => {
-        // rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageNumber)
-        //     .then((res) => {
-        //         console.log('onEndReached called')
-        //         setData((prev) => {
-        //             let next = [...prev]
-        //             next.push(res.data.data.posts)
-        //             return next
-        //         })
-        //         ++pageNumber
-        //     })
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageIndex)
+            .then((res) => {
+                console.log('onEndReached called')
+                console.log(pageIndex)
+                setData((prev) => {
+                    let next = [...prev]
+                    next.push(...res.data.data.posts)
+                    return next
+                })
+                if (res.data.data.posts.length > 0)
+                    setPageIndex((prev) => prev + 1)
+            })
+            .catch((err) => console.log(err.response.data))
     }
 
     const renderItem = ({ item }: { item: DataType }) => <TouchableOpacity style={styles.contentView}

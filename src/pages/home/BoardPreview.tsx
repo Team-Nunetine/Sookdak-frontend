@@ -48,7 +48,10 @@ export default function BoardPreview({ route, navigation }) {
                     text: '확인',
                     onPress: () => {
                         rootContext.api.post('/api/star/' + route.params.boardId)
-                            .then((res) => setScrap((prev) => !prev))
+                            .then((res) => {
+                                setScrap((prev) => !prev)
+                            })
+                            .catch((err) => console.log(err))
                     }
                 }
             ])
