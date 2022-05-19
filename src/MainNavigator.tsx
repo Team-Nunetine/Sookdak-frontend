@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AuthNavigator from './pages/auth/AuthNavigator'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useRootContext } from './RootProvider'
@@ -8,6 +8,7 @@ import HomeNavigator from './pages/home/HomeNavigator'
 import ChettingNavigator from './pages/chetting/ChettingNavigator'
 import TimetableNavigator from './pages/timetable/TimetableNavigator'
 import MypageNavigator from './pages/mypage/MypageNavigator'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function MainNavigator() {
     const context = useRootContext()
@@ -26,6 +27,37 @@ export default function MainNavigator() {
             tabBarHideOnKeyboard: true
         }
     }
+
+    useEffect(() => {
+        AsyncStorage.getItem('accessToken', (err, accessToken) => {
+            AsyncStorage.getItem('refreshToken', (err, refreshToken) => {
+                if (accessToken && accessToken.length > 0)
+                    context.api.post('/api/user/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                        .then((res) => {
+                            AsyncStorage.setItem('accessToken', res.data.data.accessToken)
+                            AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
+                            context.setUser((prev) => {
+                                const next = JSON.parse(JSON.stringify(prev))
+                                next.token = accessToken
+                                return next
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            accessToken = ''
+                            context.setUser((prev) => {
+                                const next = JSON.parse(JSON.stringify(prev))
+                                next.token = ''
+                                return next
+                            })
+                        })
+            })
+        })
+    }, [])
+
     if (context.user.token == null || context.user.token == '')
         return <AuthNavigator />
     return <Tab.Navigator screenOptions={scOpt}>

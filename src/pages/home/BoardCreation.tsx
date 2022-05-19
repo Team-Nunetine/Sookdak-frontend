@@ -6,10 +6,6 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import { useRootContext } from '../../RootProvider'
 
 export default function BoardCreation({ navigation }) {
-    useFocusEffect(() => {
-        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
-        navigation.getParent().setOptions({ swipeEnabled: false })
-    })
 
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')

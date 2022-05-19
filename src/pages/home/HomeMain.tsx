@@ -1,11 +1,18 @@
 import { DrawerActions, useFocusEffect, useNavigation } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import { useHomeContext } from './HomeProvider'
 
 export default function HomeMain({ navigation, route }) {
+    
+    useFocusEffect(useCallback(() => {
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
+        navigation.getParent().setOptions({ swipeEnabled: true })
+        setCurrentBoard(-1)
+    },[]))
+    
     const [data, setData] = useState([
         {
             title: '숙플레이스',
@@ -78,14 +85,13 @@ export default function HomeMain({ navigation, route }) {
         },
     ])
     const { setCurrentBoard } = useHomeContext()
-    useFocusEffect(() => setCurrentBoard(-1))
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
             style={styles.menuIcon}>
             <Ionicons name='menu-outline' size={25} color='#555' />
         </TouchableOpacity>
         <Text style={styles.appName}>숙닥숙닥</Text>
-        <TouchableOpacity onPress={() => { }}
+        <TouchableOpacity onPress={() => { navigation.navigate('NoticeStack', { screen: 'Notice' }) }}
             style={styles.bellIcon}>
             <Ionicons name='notifications-outline' size={22} color='#555' />
         </TouchableOpacity>

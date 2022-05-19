@@ -15,11 +15,8 @@ export default function FavoritesEdit({ navigation }) {
     useFocusEffect(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
-        return () => {
-            navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
-            navigation.getParent().setOptions({ swipeEnabled: true })
-        }
     })
+    
     const homeContext = useHomeContext()
 
     const renderItem = ({ item, drag, isActive }: RenderItemParams<ItemType>) => <ScaleDecorator>
