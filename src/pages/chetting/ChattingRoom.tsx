@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput} from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput, AsyncStorage} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { GiftedChat, Send } from 'react-native-gifted-chat';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -7,8 +7,10 @@ import { DrawerActions, useFocusEffect } from "@react-navigation/native";
 
 export default function ChattingRoom({route, navigation}) {
     useFocusEffect(() => {
-        return navigation.getParent().setOptions({ tabBarStyle: { display: 'none' } })
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
+        navigation.getParent().setOptions({ swipeEnabled: false })
     })
+    const ENDPOINT = "http://";
     const MOCK_MESSAGES = [
         {
           _id: 1,
@@ -22,17 +24,35 @@ export default function ChattingRoom({route, navigation}) {
         },
       ];
 
+
     const [name, setName] = useState('');
     const [message, setMessage] = useState(MOCK_MESSAGES);
+
 
     const user = {
         _id: name,
         avatar: 'https://i.ibb.co/kQ7JTW4/Kakao-Talk-Photo-2022-05-10-14-35-48.png'
     };
 
-    const onSend = newMessages => {
-        setMessage(GiftedChat.append(message, newMessages));
+    // useEffect(() => {
+    //     socket.emit('loadMessage', {})
+    //     socket.on('loadMessage', msg => {
+    //         setMessage(msg)
+    //     })
+    // })
+
+    // function _onSend(msg) {
+    //     socket.emit('NewMessage', msg)
+    //     socket.on('newMessageAll', msg => {
+    //         setMessage(GiftedChat.append(message, msg))
+    //     })
+    // }
+
+    const _onSend = msg => {
+        setMessage(GiftedChat.append(message, msg));
       };
+
+    console.log(message)
 
     // const searchRoom = (input) => {
     //     let data = message
@@ -82,7 +102,7 @@ export default function ChattingRoom({route, navigation}) {
             <View style={{flex : 1}}>
                 <GiftedChat
                 messages={message}
-                onSend={newMessage => onSend(newMessage)}
+                onSend={msg => _onSend(msg)}
                 user={user}
                 renderUsernameOnMessage
                 alwaysShowSend

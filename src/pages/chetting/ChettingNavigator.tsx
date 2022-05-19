@@ -9,7 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function ChettingNavigator({route, navigation}) {
     const Drawer = createDrawerNavigator()
-    return <Drawer.Navigator initialRouteName='ChattingStack' drawerContent={props => <CustomDrawerContent route={route} navigation={{navigation}}/>} screenOptions={{ headerShown: false, drawerType: 'front', drawerPosition: 'right' }}>
+    return <Drawer.Navigator initialRouteName='ChattingStack' drawerContent={props => <CustomDrawerContent route={route} navigation={navigation}/>} screenOptions={{ headerShown: false, drawerType: 'front', drawerPosition: 'right' }}>
         <Drawer.Screen name='ChattingStack' component={ChattingStack}/>
     </Drawer.Navigator>
 }
@@ -24,11 +24,11 @@ function ChattingStack() {
 }
 
 function CustomDrawerContent({route, navigation}) {
-    const [alarm, setAlarm] = useState(false)
+    const [alarm, setAlarm] = useState(true)
 
     const toggleAlarm = () => setAlarm(!alarm);
     return <DrawerContentScrollView>
-        <TouchableOpacity style={styles.container} onPress={() => {/*채팅방 나가기*/}}>
+        <TouchableOpacity style={styles.container} onPress={() => {navigation.navigate('ChettingMain')}}>
             <Text style={styles.text}>채팅방 나가기</Text>
         </TouchableOpacity>
         <View style={styles.container}>
