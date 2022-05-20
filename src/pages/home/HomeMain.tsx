@@ -74,7 +74,7 @@ export default function HomeMain({ navigation, route }) {
                     onPress={() => {
                         navigation.navigate('PostStack', {
                             screen: 'PostDetail',
-                            params: { boardName: v.boardName, boardId: v.boardId }
+                            params: { boardName: v.boardName, postId: content.postId }
                         })
                     }}>
                     <Text style={styles.content} numberOfLines={3}>{content.content}</Text>

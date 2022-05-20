@@ -5,6 +5,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Octicons from 'react-native-vector-icons/Octicons'
 import { useRootContext } from '../../RootProvider'
+import LottieView from 'lottie-react-native'
 
 type DataType = {
     postId: number,
@@ -16,16 +17,18 @@ type DataType = {
 }
 
 export default function PostList({ route, navigation }) {
-    const [data, setData] = useState<DataType[]>([
-        //     {
-        //     postId: 10,
-        //     content: '로딩전',
-        //     createdAt: '1010',
-        //     likes: 1,
-        //     comments: 1,
-        //     image: true
-        // }
-    ])
+    const [data, setData] = useState<DataType[]>([])
+
+    const [loading, setLoading] = useState(true)
+
+    useFocusEffect(useCallback(() => {
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
+        navigation.getParent().setOptions({ swipeEnabled: true })
+        return () => {
+            navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+            navigation.getParent().setOptions({ swipeEnabled: false })
+        }
+    }, []))
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -42,6 +45,7 @@ export default function PostList({ route, navigation }) {
                 console.log('useEffect')
                 setData(res.data.data.posts)
                 setPageIndex(1)
+                setLoading(false)
             })
             .catch((err) => console.log(err.response.data))
     }, []), [])
@@ -64,7 +68,7 @@ export default function PostList({ route, navigation }) {
 
     const renderItem = ({ item }: { item: DataType }) => <TouchableOpacity style={styles.contentView}
         onPress={() => {
-            navigation.navigate('PostDetail', { boardName: route.params.boardName })
+            navigation.navigate('PostDetail', { boardName: route.params.boardName, postId: item.postId })
         }}>
         <Text style={styles.content} numberOfLines={3}>{item.content}</Text>
         <View style={styles.bottomView}>
@@ -80,6 +84,12 @@ export default function PostList({ route, navigation }) {
             <Text style={styles.time}>{item.createdAt}</Text>
         </View>
     </TouchableOpacity>
+
+    if (loading)
+        return <LottieView
+            source={require('../../../assets/lottie/loading.json')}
+            loop
+            autoPlay />
 
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
