@@ -20,7 +20,7 @@ export default function MypageMywriting({route, navigation}) {
 
     const rootContext = useRootContext()
     const [pageIndex, setPageIndex] = useState(0)
-    const [data1, setData] = useState<DataType[]>([])
+    const [data, setData] = useState<DataType[]>([])
     const [refreshing, setRefreshing] = useState(false)
     
     const onRefresh = useCallback(() => {
@@ -61,7 +61,7 @@ export default function MypageMywriting({route, navigation}) {
             </TouchableOpacity>
             <Text style={styles.topText}>내가 쓴 글</Text>
             <FlatList
-                data = {data1}
+                data = {data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.postId.toString()}
                 refreshControl={<RefreshControl
