@@ -27,12 +27,7 @@ export default function MypageMywriting({route, navigation}) {
     }, []);    
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://13.209.48.180:8080/api/user/mypost/' + 0, {
-        headers: {
-            'Content-Type' : 'application/json',
-            'Authorization' : 'Bearer '+ rootContext.user.token
-        }
-        }).then((res) => {
+        rootContext.api.get('http://13.209.48.180:8080/api/user/mypost/' + 0).then((res) => {
             setData(res.data.data.posts)
             setPageIndex(1)
         }).catch((err) => console.log(err.response.data))
