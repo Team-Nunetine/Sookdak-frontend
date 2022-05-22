@@ -29,6 +29,7 @@ const LoginPage = ({navigation}: {navigation: any}) => {
             })
             .then(function (res) {
                 accessToken = res.data.data.accessToken;
+                console.log(accessToken)
                 refreshToken = res.data.data.refreshToken;
                 rootContext.setUser({token: res.data.data.accessToken, username: googleRes.user.name});
                 AsyncStorage.setItem('accessToken', res.data.data.accessToken)
