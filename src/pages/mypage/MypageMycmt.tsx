@@ -33,7 +33,7 @@ export default function MypageMycmt({navigation}) {
         })
     }, []), [])
 
-    const renderItem = ({ item }: {item : DataType }) =>  <ScrollView contentContainerStyle={{ paddingBottom: 10}}>
+    const renderItem = ({ item }: {item : DataType }) =>  <ScrollView>
     <View key={item.postId} style={styles.contentListContainer}>
         <View style={styles.textInputRow}>
             <TouchableOpacity style={styles.contentView}>
@@ -75,7 +75,7 @@ export default function MypageMycmt({navigation}) {
 
 const styles = StyleSheet.create({
     contentListContainer: {
-        marginTop: 20,
+        marginTop: 10,
         marginHorizontal: 10,
     },
     topText: {
