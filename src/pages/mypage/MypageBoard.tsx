@@ -23,15 +23,24 @@ export default function MypageBoard({ route, navigation }) {
     useEffect(useCallback(() => {
         rootContext.api.get('http://13.209.48.180:8080/api/user/myboard').then((res) => {
             setData(res.data.data.boards)
-            console.log(res.data.data.boards.boardId)
         }).catch((err) => console.log(err.response.data))
     },[]),[])
 
-    const onRemove = boardId => {
+    // const onRemove = boardId => {
+    //     Alert.alert("정말 삭제하시겠습니까?")
+    //     useEffect(useCallback(() => {
+    //         rootContext.api.delete('http://13.209.48.180:8080/api/board/' + route.params.boardId).then((res) => {
+    //             setData(data.filter(res => res.boardId != boardId))
+    //             console.log("삭제됨") 
+    //         }).catch((err) => console.log(err.response.data))
+    //     }, []), [])
+    // }
+
+    const onRemove = ({item2}: {item2:DataType}) => {
         Alert.alert("정말 삭제하시겠습니까?")
         useEffect(useCallback(() => {
-            rootContext.api.delete('http://13.209.48.180:8080/api/board/' + route.params.boardId).then((res) => {
-                setData(data.filter(res => res.boardId != boardId))
+            rootContext.api.delete('http://13.209.48.180:8080/api/board/' + item2.boardId).then((res) => {
+                setData(data.filter(res => res.boardId != item2.boardId))
                 console.log("삭제됨") 
             }).catch((err) => console.log(err.response.data))
         }, []), [])
@@ -45,7 +54,12 @@ export default function MypageBoard({ route, navigation }) {
         </View>
         <TouchableOpacity 
          style={styles.button} 
-         onPress={() => (console.log(item.boardId))}>
+         onPress={() => (useEffect(useCallback(() => {
+            rootContext.api.delete('http://13.209.48.180:8080/api/board/' + item.boardId).then((res) => {
+                setData(data.filter(res => res.boardId != item.boardId))
+                console.log("삭제됨") 
+            }).catch((err) => console.log(err.response.data))
+        }, []), []))}>
         <Button title="삭제" color='#fff'></Button>
         </TouchableOpacity>
         </View>
