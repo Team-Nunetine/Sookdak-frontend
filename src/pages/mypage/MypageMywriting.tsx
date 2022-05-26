@@ -16,14 +16,6 @@ type DataType = {
     images: boolean
 }
 
-// type DataTypeGet = {
-//     content: string,
-//     createdAt: string,
-//     likes: number,
-//     comments: number,
-//     images: boolean
-// }
-
 export default function MypageMywriting({route, navigation}) {
 
     const rootContext = useRootContext()
@@ -42,17 +34,6 @@ export default function MypageMywriting({route, navigation}) {
             console.log(res.data.data.posts.postId)
         }).catch((err) => console.log(err.response.data))
         }, []), []) 
-    
-    // const onPress = ({item2}: {item2:DataType}) => {
-    //     useEffect(useCallback(() => {
-    //         rootContext.api.get('http://13.209.48.180:8080/api/post/' + route.params.postId).then((res) => {
-    //             setDataGet(res.data.data.post)
-    //             console.log(item2.postId)
-    //         }).catch((err) => console.log(err.response.data))
-    //     }, []), [])
-    // }
-
-    
     
     const renderItem = ({ item }: { item : DataType }) => <ScrollView>
     <View key={item.postId} style={styles.contentListContainer}>
