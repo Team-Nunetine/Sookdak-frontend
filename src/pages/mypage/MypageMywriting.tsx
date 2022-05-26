@@ -13,14 +13,23 @@ type DataType = {
     createdAt: string,
     likes: number,
     comments: number,
-    image: boolean
+    images: boolean
 }
+
+// type DataTypeGet = {
+//     content: string,
+//     createdAt: string,
+//     likes: number,
+//     comments: number,
+//     images: boolean
+// }
 
 export default function MypageMywriting({route, navigation}) {
 
     const rootContext = useRootContext()
     const [pageIndex, setPageIndex] = useState(0)
     const [data, setData] = useState<DataType[]>([])
+    // const [dataGet, setDataGet] = useState<DataType[]>([])
     const [refreshing, setRefreshing] = useState(false)
     
     const onRefresh = useCallback(() => {
@@ -30,14 +39,25 @@ export default function MypageMywriting({route, navigation}) {
         rootContext.api.get('http://13.209.48.180:8080/api/user/mypost/' + 0).then((res) => {
             setData(res.data.data.posts)
             setPageIndex(1)
+            console.log(res.data.data.posts.postId)
         }).catch((err) => console.log(err.response.data))
         }, []), []) 
+    
+    // const onPress = ({item2}: {item2:DataType}) => {
+    //     useEffect(useCallback(() => {
+    //         rootContext.api.get('http://13.209.48.180:8080/api/post/' + route.params.postId).then((res) => {
+    //             setDataGet(res.data.data.post)
+    //             console.log(item2.postId)
+    //         }).catch((err) => console.log(err.response.data))
+    //     }, []), [])
+    // }
 
-
-    const renderItem = ({ item }: { item : DataType }) => <ScrollView contentContainerStyle={{ paddingBottom: 10}}>
+    
+    
+    const renderItem = ({ item }: { item : DataType }) => <ScrollView>
     <View key={item.postId} style={styles.contentListContainer}>
         <View style={styles.textInputRow}>
-            <TouchableOpacity style={styles.contentView}>
+            <TouchableOpacity style={styles.contentView} onPress={() => navigation.navigate('PostDetail', { postId: item.postId })}>
             <Text style={styles.time}>{item.createdAt}</Text>
             <Text style={styles.content}>{item.content}</Text>
             <View style={styles.countView}>
@@ -45,7 +65,7 @@ export default function MypageMywriting({route, navigation}) {
                 <Text style={[styles.count, { color: '#AD3E3E' }]}>{item.likes}</Text>
                 <Icon name='comment-processing-outline' size={13} color='#003087' />
                 <Text style={[styles.count, { color: '#003087' }]}>{item.comments}</Text>
-                {item.image ?
+                {item.images ?
                     <Icon name='image-outline' size={13} color='#333' />
                     : undefined}
             </View>
@@ -74,7 +94,7 @@ export default function MypageMywriting({route, navigation}) {
 
 const styles = StyleSheet.create({
     contentListContainer: {
-        marginTop: 20,
+        marginTop: 10,
         marginHorizontal: 10,
     },
     topText: {
