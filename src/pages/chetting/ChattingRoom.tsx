@@ -1,9 +1,16 @@
-import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput} from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput, AsyncStorage} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { GiftedChat } from 'react-native-gifted-chat';
+import { GiftedChat, Send } from 'react-native-gifted-chat';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { DrawerActions, useFocusEffect } from "@react-navigation/native";
 
 export default function ChattingRoom({route, navigation}) {
+    useFocusEffect(() => {
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    })
+    const ENDPOINT = "http://";
     const MOCK_MESSAGES = [
         {
           _id: 1,
@@ -12,28 +19,62 @@ export default function ChattingRoom({route, navigation}) {
           user: {
             _id: 2,
             name: '익명',
-            avatar: 'https://www.sookmyung.ac.kr/sites/sookmyungkr/images/sub/contents/trade_character_05.png',
+            avatar: 'https://i.ibb.co/kQ7JTW4/Kakao-Talk-Photo-2022-05-10-14-35-48.png'
           },
         },
       ];
 
+
     const [name, setName] = useState('');
     const [message, setMessage] = useState(MOCK_MESSAGES);
 
+
     const user = {
         _id: name,
-        avatar: 'https://www.sookmyung.ac.kr/sites/sookmyungkr/images/sub/contents/trade_character_05.png'
+        avatar: 'https://i.ibb.co/kQ7JTW4/Kakao-Talk-Photo-2022-05-10-14-35-48.png'
     };
 
-    const onSend = newMessages => {
-        setMessage(GiftedChat.append(message, newMessages));
-      };
+    // useEffect(() => {
+    //     socket.emit('loadMessage', {})
+    //     socket.on('loadMessage', msg => {
+    //         setMessage(msg)
+    //     })
+    // })
 
-    // const searchRoom = (input) => {
-    //     let data = 
+    // function _onSend(msg) {
+    //     socket.emit('NewMessage', msg)
+    //     socket.on('newMessageAll', msg => {
+    //         setMessage(GiftedChat.append(message, msg))
+    //     })
     // }
 
-    
+    const _onSend = msg => {
+        setMessage(GiftedChat.append(message, msg));
+      };
+
+    console.log(message)
+
+    // const searchRoom = (input) => {
+    //     let data = message
+    //     let searchData = data.filter((item) => {
+    //         return item.text.includes(input)
+    //     });
+    // }
+
+    const renderSend = (props) => {
+        return (
+            <Send{...props}>
+                <View>
+                    <MaterialCommunityIcons 
+                     name='send-circle' 
+                    size={32} 
+                    style={{marginBottom: 6, marginRight: 5}}
+                    color='#2e64e5'/>
+                </View> 
+            </Send>
+        )
+    }
+        
     return(
         <SafeAreaView style={styles.container}>
             <View style={styles.topView}>
@@ -43,7 +84,7 @@ export default function ChattingRoom({route, navigation}) {
             </TouchableOpacity>
             <Text style={styles.topText}>{route.params.roomName}</Text>
             <TouchableOpacity
-            onPress={() => {}}>
+            onPress={() => {navigation.dispatch(DrawerActions.openDrawer())}}>
                 <Ionicons name="ellipsis-vertical-outline" size={30}></Ionicons>
             </TouchableOpacity>
             </View>
@@ -61,9 +102,11 @@ export default function ChattingRoom({route, navigation}) {
             <View style={{flex : 1}}>
                 <GiftedChat
                 messages={message}
-                onSend={newMessage => onSend(newMessage)}
+                onSend={msg => _onSend(msg)}
                 user={user}
                 renderUsernameOnMessage
+                alwaysShowSend
+                renderSend={renderSend}
                 />
             </View>
         </SafeAreaView>
@@ -86,6 +129,10 @@ const styles = StyleSheet.create({
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center'
+    },
+    list: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     textInputRow: {
         backgroundColor: '#f5f5f5',

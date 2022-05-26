@@ -1,16 +1,24 @@
+import { useFocusEffect } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default function ChattingStart({ route, navigation }) {
-
+    useFocusEffect(() => {
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    })
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('')
 
     function roomNavigate({title, desc}) {
-        if(title == "") 
-            return Alert.alert('채팅방 이름을 입력해주세요.')
+        if(title == "") {
+            if(desc == "") 
+                Alert.alert('채팅방 이름과 소개를 입력해주세요.')
+            else
+                return Alert.alert('채팅방 이름을 입력해주세요.')
+        }
         else
             return navigation.navigate('ChattingRoom', {roomName: title})
     }

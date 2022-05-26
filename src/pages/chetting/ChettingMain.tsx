@@ -1,10 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState} from 'react'
+import { useFocusEffect } from "@react-navigation/native";
 import { SafeAreaView, View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { Title } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 export default function ChettingMain({ route, navigation }) {
+    useFocusEffect(() => {
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    })
     const listTab = [
         {
             status: 'MY'

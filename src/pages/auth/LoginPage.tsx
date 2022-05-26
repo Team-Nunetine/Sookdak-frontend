@@ -24,11 +24,12 @@ const LoginPage = ({navigation}: {navigation: any}) => {
 
     const signIn = () => {
         GoogleSignin.signIn().then((googleRes) => {
-            axios.post('http://52.78.202.206:8080/api/user/login', {
+            axios.post('http://13.209.48.180:8080/api/user/login', {
                 email: googleRes.user.email
             })
             .then(function (res) {
                 accessToken = res.data.data.accessToken;
+                console.log(accessToken)
                 refreshToken = res.data.data.refreshToken;
                 rootContext.setUser({token: res.data.data.accessToken, username: googleRes.user.name});
                 AsyncStorage.setItem('accessToken', res.data.data.accessToken)
