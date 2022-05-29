@@ -68,7 +68,11 @@ export default function PostList({ route, navigation }) {
 
     const renderItem = ({ item }: { item: DataType }) => <TouchableOpacity style={styles.contentView}
         onPress={() => {
-            navigation.navigate('PostDetail', { boardName: route.params.boardName, postId: item.postId })
+            navigation.navigate('PostDetail', {
+                boardName: route.params.boardName,
+                boardId: route.params.boardId,
+                postId: item.postId
+            })
         }}>
         <Text style={styles.content} numberOfLines={3}>{item.content}</Text>
         <View style={styles.bottomView}>

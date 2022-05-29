@@ -1,33 +1,47 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { useRootContext } from '../../RootProvider'
 import axios from 'axios'
+import { useFocusEffect } from '@react-navigation/native'
 
 export default function PostUpload({ route, navigation }) {
     const [text, setText] = useState('')
     const [photoList, setPhotoList] = useState<any[]>([])
     const rootContext = useRootContext()
+
+    useFocusEffect(useCallback(() => {
+        console.log(route.params)
+        if (route.params.postId)
+            rootContext.api.get('/api/post/' + route.params.postId)
+                .then((res) => {
+                    if (res.data.success == false)
+                        Alert.alert('오류', res.data.message)
+                    setText(res.data.data.post.content)
+                    let photoListFromServer: any[] = []
+                    res.data.data.post.images.map((v) => photoListFromServer.push({
+                        fileName: v,
+                        type: 'image/jpeg',
+                        uri: v,
+                    }))
+                    setPhotoList(photoListFromServer)
+                })
+                .catch((err) => console.log(err.response.data))
+    }, []))
+
     const onPressComplete = () => {
-        Alert.alert('완료', '게시글 작성을 완료하겠습니까?',
+        Alert.alert('완료', route.params.postId ? '게시글 수정을 완료하겠습니까?' : '게시글 작성을 완료하겠습니까?',
             [
                 {
                     text: '취소'
                 },
                 {
                     text: '확인', onPress: () => {
-                        // axios.post('http://13.209.48.180:8080/api/post/' + route.params.boardId + '/save',
-                        //     new FormData(),//createFormData(photoList, text),
-                        //     {
-                        //         headers: {
-                        //             'Content-Type': 'multipart/form-data',
-                        //             'Authorization': 'Bearer ' + rootContext.user.token
-                        //         }
-                        //     }
-                        // )
-                        fetch('http://13.209.48.180:8080/api/post/' + route.params.boardId + '/save', {
+                        console.log(photoList)
+                        fetch(route.params.postId ? ('http://3.36.250.198:8080/api/post/' + route.params.postId)
+                            : ('http://3.36.250.198:8080/api/post/' + route.params.boardId + '/save'), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'multipart/form-data',
@@ -70,14 +84,16 @@ export default function PostUpload({ route, navigation }) {
 
     const deleteImage = (i) => {
         Alert.alert('삭제', '이 이미지를 삭제하겠습니까?', [
-            {text: '취소'},
-            {text: '확인', onPress: () => {
-                setPhotoList((prev) => {
-                    let next = [...prev]
-                    next.splice(i, 1)
-                    return next
-                })
-            }}
+            { text: '취소' },
+            {
+                text: '확인', onPress: () => {
+                    setPhotoList((prev) => {
+                        let next = [...prev]
+                        next.splice(i, 1)
+                        return next
+                    })
+                }
+            }
         ])
     }
 
