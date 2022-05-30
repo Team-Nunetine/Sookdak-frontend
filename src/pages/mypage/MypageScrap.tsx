@@ -26,9 +26,10 @@ export default function MypageScrap({navigation}) {
     }, [])
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://13.209.48.180:8080/api/user/myscrap/' + 0).then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/user/myscrap/' + 0).then((res) => {
             setData(res.data.data.scraps)
             setPageIndex(1)
+            console.log('스크랩 조회')
         }).catch((err) => console.log(err.response.data))
     },[]),[])
 
