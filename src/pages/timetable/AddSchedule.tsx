@@ -24,18 +24,33 @@ export default function AddSchedule({ navigation }) {
     const rootContext = useRootContext()
     const [modalVisible, setModalVisible] = useState(false)
     const [selected, setSelected] = useState<LectureType | null>(null)
-
-    // useEffect(useCallback(() => {
-    //     rootContext.api.get('/api/lecture/0')
-    //         .then((res) => setResult(res.data.data.lectures))
-    //         .catch((err) => console.log(err))
-    // }, []), [])
+    const [pageIndex, setPageIndex] = useState(0)
 
     const onEndEditing = () => {
         rootContext.api.post('/api/lecture/search/0', {
             word: value
         })
-            .then((res) => setResult(res.data.data.lectures))
+            .then((res) => {
+                setResult(res.data.data.lectures)
+                setPageIndex(1)
+            })
+            .catch((err) => console.log(err.response.data))
+    }
+
+    const onEndReached = () => {
+        rootContext.api.post('/api/lecture/search/' + pageIndex, {
+            word: value
+        })
+            .then((res) => {
+                console.log('called')
+                setResult((prev) => {
+                    let next = [...prev]
+                    next.push(...res.data.data.lectures)
+                    return next
+                })
+                if (result.length > 0)
+                    setPageIndex((prev) => prev + 1)
+            })
             .catch((err) => console.log(err.response.data))
     }
 
@@ -51,13 +66,15 @@ export default function AddSchedule({ navigation }) {
                 if (res.data.success)
                     setModalVisible(false)
             })
+            .catch((err) => Alert.alert('오류', err.response.data.message))
     }
 
     const renderItem = ({ item }: { item: LectureType }) => <TouchableOpacity
         style={styles.row} onPress={() => onPressLecture(item)}>
         <Text style={styles.name}>{item.name}</Text>
         <Text style={styles.info2}>{item.classNum}   |   {item.professor}</Text>
-        <Text style={styles.info3}>{item.datetime} ({item.place})</Text>
+        {item.datetime || item.place ?
+            <Text style={styles.info3}>{item.datetime} {item.place ? '(' + item.place + ')' : ''}</Text> : undefined}
     </TouchableOpacity>
 
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -76,7 +93,8 @@ export default function AddSchedule({ navigation }) {
             data={result}
             renderItem={renderItem}
             keyExtractor={(item) => item.lectureId.toString()}
-            contentContainerStyle={{ paddingHorizontal: 30 }} />
+            contentContainerStyle={{ paddingHorizontal: 30 }}
+            onEndReached={onEndReached} />
         <Modal
             animationType="slide"
             transparent={true}
@@ -87,7 +105,8 @@ export default function AddSchedule({ navigation }) {
                 <View style={modalStyles.modalView}>
                     <Text style={styles.name}>{selected?.name}</Text>
                     <Text style={styles.info2}>{selected?.classNum}   |   {selected?.professor}</Text>
-                    <Text style={styles.info3}>{selected?.datetime} ({selected?.place})</Text>
+                    {selected?.datetime || selected?.place ?
+                        <Text style={styles.info3}>{selected?.datetime} {selected?.place ? '(' + selected?.place + ')' : ''}</Text> : undefined}
                     <View style={modalStyles.bottomView}>
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
                             <Text style={modalStyles.cancel}>취소</Text>

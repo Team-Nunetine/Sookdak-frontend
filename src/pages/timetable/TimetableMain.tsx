@@ -104,19 +104,19 @@ export default function TimetableMain({ navigation }) {
                 <View style={{
                     borderBottomWidth: 0.5,
                     borderRightWidth: 0.5,
-                    borderColor: '#d3d3d3'
+                    borderColor: '#e3e3e3'
                 }}>
                     {hours.map((v, i) => <View style={{
                         flexDirection: 'row',
                         height: timeTableHeight,
-                        borderColor: '#d3d3d3'
+                        borderColor: '#e3e3e3'
                     }} key={'hoursRow' + i}>
                         {[0, 1, 2, 3, 4].map((v, i) => <View key={'daysColumn' + i}
                             style={{
                                 width: '20%',
                                 borderTopWidth: 0.5,
                                 borderLeftWidth: 0.5,
-                                borderColor: '#d3d3d3'
+                                borderColor: '#e3e3e3'
                             }} />)}
                     </View>)}
                     {data.map((v, i) => { return v.day1 ? <Block v={v} i={i} day={v.day1} key={'data' + i + v.day1} /> : undefined })}
@@ -145,7 +145,7 @@ export default function TimetableMain({ navigation }) {
                         <Text style={modalStyles.text2}>{selected?.classNum}</Text>
                     </View>
                     <View style={modalStyles.row}>
-                        <Text style={modalStyles.text1}>시간</Text>
+                        <Text style={modalStyles.text1}>강의시간</Text>
                         <Text style={modalStyles.text2}>
                             {(selected?.day1 == null && selected?.day2 == null) ? '없음'
                                 : (selected?.day1 ? selected.day1 : '')
@@ -153,16 +153,16 @@ export default function TimetableMain({ navigation }) {
                                 + (selected.startTime ? selected.startTime + '-' + selected?.endTime : '')}</Text>
                     </View>
                     <View style={modalStyles.row}>
-                        <Text style={modalStyles.text1}>장소</Text>
+                        <Text style={modalStyles.text1}>강의실</Text>
                         <Text style={modalStyles.text2}>{selected?.place == null ? '없음' : selected?.place}</Text>
                     </View>
                     <View style={modalStyles.row}>
-                        <Text style={modalStyles.text1}>학점</Text>
+                        <Text style={modalStyles.text1}>교과구분</Text>
                         <Text style={modalStyles.text2}>{selected?.type + ' ' + selected?.credit + '학점'}</Text>
                     </View>
                     <View style={modalStyles.bottomView}>
                         <TouchableOpacity onPress={() => onPressDelete(selected?.lectureId)}>
-                            <Ionicons name='trash-outline' size={20} color='tomato' />
+                            <Ionicons name='trash-outline' size={20} color='#D31C23' />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setModalVisible(false)}>
                             <Text style={modalStyles.button}>확인</Text>
@@ -223,11 +223,13 @@ const styles = StyleSheet.create({
     },
     hour: {
         color: '#455B83',
-        fontSize: 11
+        fontSize: 11,
+        fontWeight: '300'
     },
     text: {
         color: '#455B83',
-        fontSize: 12
+        fontSize: 12,
+        fontWeight: '300'
     }
 })
 
