@@ -30,7 +30,9 @@ type CommentType = {
     imageURL: string,
     likes: number,
     createdAt: string,
-    reply: CommentType[]
+    reply: CommentType[],
+    writer: boolean,
+    userLiked: boolean,
 }
 
 type CommentsDataType = CommentType[]
@@ -74,8 +76,14 @@ export default function PostDetail({ route, navigation }) {
     useFocusEffect(useCallback(() => {
         navigation.getParent().setOptions({ swipeEnabled: false })
         load(null)
+        Keyboard.addListener('keyboardDidHide', () => {
+            console.log('keyboardDidHide')
+            setCurrentFocusedComment(null)
+            setCommenting(false)
+        })
         return () => {
             navigation.getParent().setOptions({ swipeEnabled: true })
+            Keyboard.removeAllListeners('keyboardDidHide')
         }
     }, []))
 
@@ -124,7 +132,7 @@ export default function PostDetail({ route, navigation }) {
                     return
                 }
                 load(() => {
-                    if (currentFocusedComment == 0)
+                    if (currentFocusedComment == null)
                         scrollViewRef.current.scrollToEnd()
                     setText('')
                     setPhoto(null)
@@ -138,16 +146,21 @@ export default function PostDetail({ route, navigation }) {
     let actionSheetRef = useRef<any>()
     let actionSheetRef2 = useRef<any>()
 
-    const [currentFocusedComment, setCurrentFocusedComment] = useState(0)
+    const [currentFocusedComment, setCurrentFocusedComment] = useState<CommentType | null>(null)
     const [commenting, setCommenting] = useState(false)
 
     let textInputRef = useRef<any>()
 
-    Keyboard.addListener('keyboardDidHide', () => {
-        console.log('keyboardDidHide')
-        setCurrentFocusedComment(0)
-        setCommenting(false)
-    })
+    const onPressCommentLike = (commentId) => {
+        rootContext.api.post('/api/comment/' + commentId + '/like')
+            .then((res) => {
+                if (res.data.success == false)
+                    Alert.alert('오류', res.data.message)
+                else
+                    load(null)
+            })
+            .catch((err) => Alert.alert('오류', err.response.data.message))
+    }
 
     if (loading)
         return <LottieView
@@ -157,11 +170,11 @@ export default function PostDetail({ route, navigation }) {
 
     const Comment = ({ v }: { v: CommentType }) => <>
         <View style={[commentStyles.view,
-        { backgroundColor: currentFocusedComment == v.commentId && commenting ? '#d8d8d8' : '#fafafa' }]}>
+        { backgroundColor: currentFocusedComment?.commentId == v.commentId && commenting ? '#d8d8d8' : '#fafafa' }]}>
             <View style={commentStyles.nameView}>
                 <Text style={commentStyles.name}>익명{v.commentOrder}</Text>
                 <TouchableOpacity onPress={() => {
-                    setCurrentFocusedComment(v.commentId)
+                    setCurrentFocusedComment(v)
                     actionSheetRef2.current.show()
                 }}>
                     <Ionicons name='ellipsis-vertical' size={16} color='#555' />
@@ -173,8 +186,8 @@ export default function PostDetail({ route, navigation }) {
                 resizeMode='cover' /> : undefined}
             <View style={commentStyles.bottomView}>
                 <TouchableOpacity style={commentStyles.countView}
-                    onPress={() => { }}>
-                    <Ionicons name='heart-outline' size={15} color='#AD3E3E' />
+                    onPress={() => onPressCommentLike(v.commentId)}>
+                    <Ionicons name={v.userLiked ? 'heart' : 'heart-outline'} size={15} color='#AD3E3E' />
                     <Text style={[commentStyles.count, { color: '#AD3E3E' }]}>{v.likes}</Text>
                 </TouchableOpacity>
                 <Text style={commentStyles.time}>{v.createdAt}</Text>
@@ -194,8 +207,8 @@ export default function PostDetail({ route, navigation }) {
                 </View>
                 <Text style={commentStyles.content}>{v.content}</Text>
                 <View style={commentStyles.bottomView}>
-                    <TouchableOpacity style={commentStyles.countView}>
-                        <Ionicons name='heart-outline' size={15} color='#AD3E3E' />
+                    <TouchableOpacity style={commentStyles.countView} onPress={() => onPressCommentLike(v.commentId)}>
+                        <Ionicons name={v.userLiked ? 'heart' : 'heart-outline'} size={15} color='#AD3E3E' />
                         <Text style={[commentStyles.count, { color: '#AD3E3E' }]}>{v.likes}</Text>
                     </TouchableOpacity>
                     <Text style={commentStyles.time}>{v.createdAt}</Text>
@@ -311,8 +324,8 @@ export default function PostDetail({ route, navigation }) {
         />
         <ActionSheet
             ref={actionSheetRef2}
-            options={['대댓글 쓰기', '취소']}
-            destructiveButtonIndex={1}
+            options={currentFocusedComment?.writer ? ['대댓글 쓰기', '댓글 삭제', '취소'] : ['대댓글 쓰기', '취소']}
+            destructiveButtonIndex={currentFocusedComment?.writer ? 2 : 1}
             onPress={(index) => {
                 if (index == 0) {
                     setCommenting(true)
@@ -320,6 +333,20 @@ export default function PostDetail({ route, navigation }) {
                         textInputRef.current?.focus()
                     }, 250)
                 }
+                if (currentFocusedComment?.writer && index == 1)
+                    Alert.alert('삭제', '댓글을 삭제하시겠습니까?', [
+                        { text: '취소' },
+                        {
+                            text: '확인', onPress: () => {
+                                rootContext.api.delete('/api/comment/' + currentFocusedComment.commentId)
+                                    .then((res) => {
+                                        console.log(res.data)
+                                        load(null)
+                                    })
+                                    .catch((err) => console.log(err))
+                            }
+                        }
+                    ])
             }} />
     </SafeAreaView>
 }
