@@ -6,6 +6,7 @@ import Feather from 'react-native-vector-icons/Feather'
 import Octicons from 'react-native-vector-icons/Octicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useRootContext } from '../../RootProvider'
+import { useHomeContext } from './HomeProvider'
 
 type DataType = {
     postId: number,
@@ -18,10 +19,9 @@ type DataType = {
 
 export default function BoardPreview({ route, navigation }) {
     const [data, setData] = useState<DataType[]>([])
-
     const [scrap, setScrap] = useState(false)
-
     const rootContext = useRootContext()
+    const homeContext = useHomeContext()
 
     let pageNumber = 0
 
@@ -50,6 +50,11 @@ export default function BoardPreview({ route, navigation }) {
                         rootContext.api.post('/api/star/' + route.params.boardId)
                             .then((res) => {
                                 setScrap((prev) => !prev)
+                                rootContext.api.get('/api/star')
+                                    .then((res) => {
+                                        homeContext.setBoards(res.data.data.stars)
+                                    })
+                                    .catch((err) => console.log(err.response.data))
                             })
                             .catch((err) => console.log(err))
                     }
@@ -93,7 +98,7 @@ export default function BoardPreview({ route, navigation }) {
                 progressViewOffset={40}
             />}
             contentContainerStyle={{ paddingHorizontal: 20 }}
-            onEndReached={()=>{}}
+            onEndReached={() => { }}
         />
     </SafeAreaView>
 }
