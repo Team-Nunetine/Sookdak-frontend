@@ -6,6 +6,10 @@ import Octicons from 'react-native-vector-icons/Octicons'
 import { useFocusEffect } from '@react-navigation/native'
 
 export default function MessageDetail({ navigation, route }) {
+    useFocusEffect(useCallback(() => {
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    }, []))
 
     const [data, setData] = useState([
         {
@@ -28,7 +32,7 @@ export default function MessageDetail({ navigation, route }) {
             <Octicons name='chevron-left' size={22} color='#555' />
         </TouchableOpacity>
         <Text style={styles.topText}>쪽지</Text>
-        <TouchableOpacity onPress={() => { navigation.navigate('MessageSend') }}
+        <TouchableOpacity onPress={() => { navigation.navigate('MessageSend', { roomId: route.params.roomId }) }}
             style={styles.sendIcon}>
             <Feather name='send' size={22} color='#555' />
         </TouchableOpacity>

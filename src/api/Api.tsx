@@ -27,6 +27,8 @@ export default function getAxiosInstance(token: string) {
             return res;
         },
         async (err) => {
+            console.log('Api.tsx')
+            console.log(err)
             //   const originalConfig = err.config;
             //   if (originalConfig.url !== "/auth/signin" && err.response) {
             //     // Access Token was expired

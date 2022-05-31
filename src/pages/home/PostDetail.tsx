@@ -23,16 +23,16 @@ type PostDataType = {
 }
 
 type CommentType = {
-    commentOrder: number,
+    commentOrder?: number,
     commentId: number,
-    parent: number,
-    content: string,
-    imageURL: string,
-    likes: number,
-    createdAt: string,
-    reply: CommentType[],
-    writer: boolean,
-    userLiked: boolean,
+    parent?: number,
+    content?: string,
+    imageURL?: string,
+    likes?: number,
+    createdAt?: string,
+    reply?: CommentType[],
+    writer?: boolean,
+    userLiked?: boolean,
 }
 
 type CommentsDataType = CommentType[]
@@ -56,11 +56,15 @@ export default function PostDetail({ route, navigation }) {
 
     const rootContext = useRootContext()
 
+    useFocusEffect(useCallback(() => {
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    }, []))
+
     const load = (callBack) => {
         rootContext.api.get('/api/post/' + route.params.postId)
             .then((res) => {
                 setPostData(res.data.data.post)
-                console.log(res.data.data.post.images)
                 rootContext.api.get('/api/comment/' + route.params.postId)
                     .then((res) => {
                         setCommentsData(res.data.data.comments)
@@ -78,7 +82,7 @@ export default function PostDetail({ route, navigation }) {
         load(null)
         Keyboard.addListener('keyboardDidHide', () => {
             console.log('keyboardDidHide')
-            setCurrentFocusedComment(null)
+            setCurrentFocusedComment({ commentId: 0 })
             setCommenting(false)
         })
         return () => {
@@ -115,7 +119,7 @@ export default function PostDetail({ route, navigation }) {
 
     const upload = () => {
         setUploadLoading(true)
-        fetch('http://3.36.250.198:8080/api/comment/' + route.params.postId + '/' + currentFocusedComment + '/save', {
+        fetch('http://3.36.250.198:8080/api/comment/' + route.params.postId + '/' + currentFocusedComment?.commentId + '/save', {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -146,7 +150,7 @@ export default function PostDetail({ route, navigation }) {
     let actionSheetRef = useRef<any>()
     let actionSheetRef2 = useRef<any>()
 
-    const [currentFocusedComment, setCurrentFocusedComment] = useState<CommentType | null>(null)
+    const [currentFocusedComment, setCurrentFocusedComment] = useState<CommentType | null>({ commentId: 0 })
     const [commenting, setCommenting] = useState(false)
 
     let textInputRef = useRef<any>()
@@ -193,7 +197,7 @@ export default function PostDetail({ route, navigation }) {
                 <Text style={commentStyles.time}>{v.createdAt}</Text>
             </View>
         </View>
-        {v.reply.map((v, i) => <View style={{
+        {v.reply?.map((v, i) => <View style={{
             flexDirection: 'row',
             alignItems: 'center',
             paddingLeft: 25
@@ -306,7 +310,6 @@ export default function PostDetail({ route, navigation }) {
                     switch (index) {
                         case 0: rootContext.api.post('/api/post/' + route.params.postId + '/warn')
                             .then((res) => {
-                                console.log(res)
                                 Alert.alert('완료', '게시글을 신고하였습니다.')
                             })
                             .catch((err) => Alert.alert('오류', err.response.data.message))
@@ -317,7 +320,7 @@ export default function PostDetail({ route, navigation }) {
                             })
                             .catch((err) => console.log(err))
                             break
-                        case 2: console.log('쪽지 보내기')
+                        case 2: navigation.navigate('MessageSendFromPost', { postId: route.params.postId })
                     }
                 }
             }}
@@ -340,7 +343,6 @@ export default function PostDetail({ route, navigation }) {
                             text: '확인', onPress: () => {
                                 rootContext.api.delete('/api/comment/' + currentFocusedComment.commentId)
                                     .then((res) => {
-                                        console.log(res.data)
                                         load(null)
                                     })
                                     .catch((err) => console.log(err))
