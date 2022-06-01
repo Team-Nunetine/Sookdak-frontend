@@ -4,27 +4,50 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Octicons from 'react-native-vector-icons/Octicons'
 import { useFocusEffect } from '@react-navigation/native'
+import { useRootContext } from '../../RootProvider'
+
+type MessageType = {
+    "messageId": number,
+    "content": string,
+    "dateTime": string,
+    "sender": boolean
+}
 
 export default function MessageDetail({ navigation, route }) {
+    const rootContext = useRootContext()
+    const [pageIndex, setPageIndex] = useState(0)
+    const [data, setData] = useState<MessageType[]>([])
+    const [endReached, setEndReached] = useState(false)
+
     useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
+        rootContext.api.get('/api/message/' + route.params.roomId + '/0')
+            .then((res) => {
+                console.log(res.data.data.messages)
+                setData(res.data.data.messages)
+                setPageIndex(1)
+            })
+            .catch((err) => console.log(err.response.data))
     }, []))
 
-    const [data, setData] = useState([
-        {
-            id: 0,
-            content: '안녕하세요1안녕하세요1안녕하세요1안녕하세요1',
-            time: '04/18 10:00',
-            isMine: false
-        },
-        {
-            id: 1,
-            content: '안녕하세요2',
-            time: '04/18 10:02',
-            isMine: true
-        }
-    ])
+    const onEndReached = () => {
+        if (endReached)
+            return
+        rootContext.api.get('/api/message/' + route.params.roomId + '/' + pageIndex)
+            .then((res) => {
+                if (res.data.data.messages == []) {
+                    setEndReached(true)
+                    return
+                }
+                setData((prev) => {
+                    let next = [...prev]
+                    next.push(...res.data.data.messages)
+                    return next
+                })
+                setPageIndex((prev) => prev + 1)
+            })
+    }
 
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
@@ -43,14 +66,17 @@ export default function MessageDetail({ navigation, route }) {
         <FlatList
             data={data}
             renderItem={({ item }) => {
-                return <View style={[styles.row, { justifyContent: item.isMine ? 'flex-end' : 'flex-start' }]}>
-                    {item.isMine ? <Text style={styles.time}>{item.time}</Text> : undefined}
+                return <View style={[styles.row, { justifyContent: item.sender ? 'flex-end' : 'flex-start' }]}>
+                    {item.sender ? <Text style={styles.time}>{item.dateTime}</Text> : undefined}
                     <Text style={styles.content}>{item.content}</Text>
-                    {item.isMine ? undefined : <Text style={styles.time}>{item.time}</Text>}
+                    {item.sender ? undefined : <Text style={styles.time}>{item.dateTime}</Text>}
                 </View>
             }}
-            keyExtractor={(item) => item.id.toString()}
-            contentContainerStyle={{ marginHorizontal: 20 }} />
+            keyExtractor={(item) => item.messageId.toString()}
+            contentContainerStyle={{ marginHorizontal: 20 }}
+            inverted={true}
+            showsVerticalScrollIndicator={false}
+            onEndReached={onEndReached} />
     </SafeAreaView>
 }
 

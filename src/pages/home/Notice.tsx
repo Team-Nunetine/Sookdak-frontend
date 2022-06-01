@@ -44,6 +44,7 @@ export default function Notice({ navigation, route }) {
             onRefresh={onRefresh}
             progressViewOffset={60}
         />}
+        showsHorizontalScrollIndicator={false}
     />
 
     const SecondRoute = () => <Text style={{
