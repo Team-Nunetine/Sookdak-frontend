@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, Alert} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
@@ -19,6 +19,7 @@ const LoginPage = ({navigation}: {navigation: any}) => {
     }, [])
     const rootContext = useRootContext();
 
+
     let accessToken;
     let refreshToken;
 
@@ -38,22 +39,14 @@ const LoginPage = ({navigation}: {navigation: any}) => {
             .catch(function(error) {
                 console.log(error);
             });
-            
-            // axios.get('http://52.78.202.206:8080/api/user/me', {
-            //     headers: {
-            //         authorization: `Bearer ${accessToken}`,
-            //     }
-            // })
-            // .then(function (res) {
-            //     console.log(res)
-            // })
-            // .catch(function (err) {
-            //     console.log("왜 에러일까",err)
-            // })
-        }).catch((err) => {
-            console.log(err)
-        });
+    })
     }
+
+    // useEffect(useCallback(() => {
+    //     rootContext.api.get('http://3.36.250.198:8080/api/user/me').then((res) => {
+    //         console.log(res.data.data.email)
+    //     }).catch((err) => console.log(err.response.data))
+    // }, []), [])
 
     return(
         <KeyboardAwareScrollView

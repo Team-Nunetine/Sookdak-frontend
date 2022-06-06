@@ -4,13 +4,39 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { GiftedChat, Send } from 'react-native-gifted-chat';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { DrawerActions, useFocusEffect } from "@react-navigation/native";
+import SockJS from 'sockjs-client';
+import { useRootContext } from '../../RootProvider';
+import Stomp from 'stompjs';
 
 export default function ChattingRoom({route, navigation}) {
-    useFocusEffect(() => {
-        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
-        navigation.getParent().setOptions({ swipeEnabled: false })
-    })
-    const ENDPOINT = "http://";
+    // useFocusEffect(() => {
+    //     navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
+    //     navigation.getParent().setOptions({ swipeEnabled: false })
+    // })
+
+    const rootContext = useRootContext()
+    const url = 'ws://3.36.250.198:8080/chat'
+    const [Connect, setConnect] = useState(false)
+    const [message, setMessage] = useState();
+    
+    let stompClient = Stomp.client(url)
+
+    const connect = () => {
+        const socket = new SockJS('http://3.36.250.198:8080/ws-stomp')
+        stompClient = Stomp.over(socket)
+        stompClient.connect({}, function (frame) {
+            setConnect(true)
+            console.log('Connected: ' + frame)
+            stompClient?.subscribe('/room/'+route.params.roomId, function (chatMessage) {
+                console.log(JSON.parse(chatMessage.body))
+                setMessage(JSON.parse(chatMessage.body))
+            })
+        })
+    }
+    
+    connect()
+    console.log("rendering")
+
     const MOCK_MESSAGES = [
         {
           _id: 1,
@@ -24,35 +50,18 @@ export default function ChattingRoom({route, navigation}) {
         },
       ];
 
-
     const [name, setName] = useState('');
-    const [message, setMessage] = useState(MOCK_MESSAGES);
-
 
     const user = {
         _id: name,
         avatar: 'https://i.ibb.co/kQ7JTW4/Kakao-Talk-Photo-2022-05-10-14-35-48.png'
     };
 
-    // useEffect(() => {
-    //     socket.emit('loadMessage', {})
-    //     socket.on('loadMessage', msg => {
-    //         setMessage(msg)
-    //     })
-    // })
+    // const _onSend = msg => {
+    //     setMessage(GiftedChat.append(message, msg));
+    //   };
 
-    // function _onSend(msg) {
-    //     socket.emit('NewMessage', msg)
-    //     socket.on('newMessageAll', msg => {
-    //         setMessage(GiftedChat.append(message, msg))
-    //     })
-    // }
-
-    const _onSend = msg => {
-        setMessage(GiftedChat.append(message, msg));
-      };
-
-    console.log(message)
+    // console.log(message)
 
     // const searchRoom = (input) => {
     //     let data = message
@@ -100,14 +109,14 @@ export default function ChattingRoom({route, navigation}) {
                 </TouchableOpacity>
             </View>
             <View style={{flex : 1}}>
-                <GiftedChat
+                {/* <GiftedChat
                 messages={message}
                 onSend={msg => _onSend(msg)}
                 user={user}
                 renderUsernameOnMessage
                 alwaysShowSend
                 renderSend={renderSend}
-                />
+                /> */}
             </View>
         </SafeAreaView>
     )
