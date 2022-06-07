@@ -3,8 +3,11 @@ import { Text, View, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 import Octicons from 'react-native-vector-icons/Octicons'
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { useRootContext } from '../../RootProvider';
 
 export default function MypageLogout({navigation}) {
+    const rootContext = useRootContext();
     return(
         <SafeAreaView style={styles.container}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}
@@ -21,6 +24,10 @@ export default function MypageLogout({navigation}) {
                      title='로그아웃' 
                      color={'white'} 
                      onPress={() => {
+                        GoogleSignin.revokeAccess();
+                        GoogleSignin.signOut();
+                        console.log('user logout');
+                        rootContext.setUser({user: null})
                      }} />
                 </ButtonContainer>
                 </View>

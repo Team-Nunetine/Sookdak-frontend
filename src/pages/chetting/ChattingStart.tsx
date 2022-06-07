@@ -1,26 +1,40 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Text, View, TextInput, Button, StyleSheet, TouchableOpacity, Alert} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useRootContext } from "../../RootProvider";
 
 export default function ChattingStart({ route, navigation }) {
-    useFocusEffect(() => {
-        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
-        navigation.getParent().setOptions({ swipeEnabled: false })
-    })
-    const [title, setTitle] = useState('');
+    
+    const rootContext = useRootContext()
+
+    // useFocusEffect(() => {
+    //     navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+    //     navigation.getParent().setOptions({ swipeEnabled: false })
+    // })
+    const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
 
-    function roomNavigate({title, desc}) {
+    const roomNavigate = ({title, desc}) => {
+        rootContext.api.post('http://3.36.250.198:8080/api/chat/save', {
+            name: title,
+            info: desc
+        }).then((res) => {
+            console.log("성공")
+            console.log(res.data.data.roomId)
+            navigation.navigate('ChattingRoom', {roomId: res.data.data.roomId})
+
+        }).catch((err) => {
+            console.log(err)
+        })
+
         if(title == "") {
-            if(desc == "") 
-                Alert.alert('채팅방 이름과 소개를 입력해주세요.')
-            else
-                return Alert.alert('채팅방 이름을 입력해주세요.')
+            return Alert.alert('채팅방 이름을 입력해주세요.')
         }
-        else
-            return navigation.navigate('ChattingRoom', {roomName: title})
+        else {
+           return navigation.navigate('ChattingRoom', {roomName: title})
+        }
     }
 
     return <SafeAreaView style={styles.topContainer}>
@@ -41,7 +55,7 @@ export default function ChattingStart({ route, navigation }) {
             <Text style={styles.roomName}>채팅방 소개</Text>
             <TextInput 
              style={styles.textInput}
-             onChangeText={(desc) => setTitle(desc)}
+             onChangeText={(desc) => setDesc(desc)}
              />
              <Text style={styles.text}>0/30</Text>
         </View>

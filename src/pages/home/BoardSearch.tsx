@@ -4,7 +4,6 @@ import { FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, 
 import Octicons from 'react-native-vector-icons/Octicons'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useRootContext } from '../../RootProvider'
-import axios from 'axios'
 
 type ResultItemType = {
     name: string,
@@ -20,12 +19,11 @@ export default function BoardSearch({ navigation }) {
     const rootContext = useRootContext()
 
     useFocusEffect(useCallback(() => {
-        // rootContext.api.get('/api/board')
-        //     .then((res) => {
-        //         setAllBoards(res.data.data.boards)
-        //         setResult(res.data.data.boards)
-        //         console.log('called')
-        //     }).catch((err) => console.log(err))
+        rootContext.api.get('/api/board')
+            .then((res) => {
+                setAllBoards(res.data.data.boards)
+                setResult(res.data.data.boards)
+            }).catch((err) => console.log(err))
     }, []))
 
     const onChange = ({ nativeEvent }) => {
@@ -34,7 +32,10 @@ export default function BoardSearch({ navigation }) {
     }
 
     const renderItem = ({ item }: { item: ResultItemType }) => <TouchableOpacity
-        onPress={() => navigation.navigate('BoardPreview', { boardName: item.name })}
+        onPress={() => navigation.navigate('BoardPreview', {
+            boardName: item.name,
+            boardId: item.boardId
+        })}
         style={styles.row}>
         <Text style={styles.boardName}>{item.name}</Text>
         <Text style={styles.description}>{item.description}</Text>

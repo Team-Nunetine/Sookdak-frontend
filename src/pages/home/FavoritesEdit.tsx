@@ -1,5 +1,5 @@
 import { useFocusEffect } from '@react-navigation/native'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
 import Octicons from 'react-native-vector-icons/Octicons'
@@ -7,15 +7,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useHomeContext } from './HomeProvider'
 
 type ItemType = {
-    boardName: string,
-    id: string
+    name: string,
+    boardId: number
 }
 
 export default function FavoritesEdit({ navigation }) {
-    useFocusEffect(() => {
+    useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
-    })
+    }, []))
     
     const homeContext = useHomeContext()
 
@@ -24,7 +24,7 @@ export default function FavoritesEdit({ navigation }) {
             <TouchableOpacity disabled={isActive}
                 onLongPress={drag} style={styles.touchableOpacity}>
                 <Icon name='unfold-more-horizontal' size={14} color='#151515' />
-                <Text style={styles.boardName}>{item.boardName}</Text>
+                <Text style={styles.boardName}>{item.name}</Text>
             </TouchableOpacity>
             <TouchableOpacity>
                 <Icon name='minus' size={18} color='#EC454C' style={styles.minusIcon} />
@@ -42,7 +42,7 @@ export default function FavoritesEdit({ navigation }) {
             data={homeContext.boards}
             renderItem={renderItem}
             onDragEnd={({ data }) => homeContext.setBoards(data)}
-            keyExtractor={(item) => item.id} />
+            keyExtractor={(item) => item.boardId.toString()} />
         <TouchableOpacity style={styles.bottomButton}
             onPress={() => navigation.navigate('BoardSearch')}>
             <Text style={styles.buttonText}>게시판 검색</Text>

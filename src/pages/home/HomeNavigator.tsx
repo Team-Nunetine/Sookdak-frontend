@@ -81,14 +81,14 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                 </Text>
             </TouchableOpacity>
         </View>
-        {boards.map((v, i) => <DrawerItem label={v.boardName} key={i}
+        {boards.map((v, i) => <DrawerItem label={v.name} key={i}
             focused={currentBoard == i}
             activeTintColor='#003087'
             onPress={() => {
                 setCurrentBoard(i)
                 props.navigation.navigate('PostStack', {
                     screen: 'PostList',
-                    params: { boardName: v.boardName }
+                    params: { boardName: v.name, boardId: v.boardId }
                 })
             }} />
         )}

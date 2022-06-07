@@ -3,8 +3,8 @@ import type { FC } from "react"
 
 type ContextType = {
     boards: {
-        boardName: string,
-        id: string
+        name: string,
+        boardId: number
     }[],
     setBoards,
     currentBoard: number,
@@ -14,16 +14,16 @@ type ContextType = {
 const defaultContext = {
     boards: [
         {
-            boardName: '숙플레이스',
-            id: '1'
+            name: '숙플레이스',
+            boardId: 0
         },
         {
-            boardName: '소융아이티컴과',
-            id: '2'
+            name: '소융아이티컴과',
+            boardId: 1
         },
         {
-            boardName: '홍보게시판',
-            id: '3'
+            name: '홍보게시판',
+            boardId: 2
         }
     ],
     setBoards: undefined,
@@ -36,16 +36,16 @@ const HomeContext = createContext<ContextType>(defaultContext)
 export const HomeProvider: FC<{}> = ({ children }) => {
     const [boards, setBoards] = useState([
         {
-            boardName: '숙플레이스',
-            id: '1'
+            name: '숙플레이스',
+            boardId: 0
         },
         {
-            boardName: '소융아이티컴과',
-            id: '2'
+            name: '소융아이티컴과',
+            boardId: 1
         },
         {
-            boardName: '홍보게시판',
-            id: '3'
+            name: '홍보게시판',
+            boardId: 2
         }
     ])
     const [currentBoard, setCurrentBoard] = useState(-1)

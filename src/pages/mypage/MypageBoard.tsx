@@ -21,29 +21,31 @@ export default function MypageBoard({ route, navigation }) {
     }, [])
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://13.209.48.180:8080/api/user/myboard').then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/user/myboard').then((res) => {
             setData(res.data.data.boards)
         }).catch((err) => console.log(err.response.data))
     },[]),[])
 
-    // const onRemove = boardId => {
-    //     Alert.alert("정말 삭제하시겠습니까?")
-    //     useEffect(useCallback(() => {
-    //         rootContext.api.delete('http://13.209.48.180:8080/api/board/' + route.params.boardId).then((res) => {
-    //             setData(data.filter(res => res.boardId != boardId))
-    //             console.log("삭제됨") 
-    //         }).catch((err) => console.log(err.response.data))
-    //     }, []), [])
-    // }
-
-    const onRemove = ({item2}: {item2:DataType}) => {
-        Alert.alert("정말 삭제하시겠습니까?")
-        useEffect(useCallback(() => {
-            rootContext.api.delete('http://13.209.48.180:8080/api/board/' + item2.boardId).then((res) => {
-                setData(data.filter(res => res.boardId != item2.boardId))
-                console.log("삭제됨") 
-            }).catch((err) => console.log(err.response.data))
-        }, []), [])
+    const onRemove = ({ boardId, name }) => {
+        Alert.alert(
+            name,
+            "게시판을 삭제하시겠습니까?",
+        [
+            {
+                text: "예",
+                onPress: () => {
+                    rootContext.api.delete('http://3.36.250.198:8080/api/board/' + boardId).then((res) => {
+                    console.log("삭제됨") 
+                    setData(data.filter(res => res.boardId != boardId))}).catch((err) => console.log(err.response.data))}
+            },
+            {
+                text: "아니오",
+                onPress: () => console.log("삭제 안함"),
+                style: "cancel"
+            }
+        ],
+        {cancelable: false}
+        );
     }
 
     const renderItem = ({item}: {item:DataType}) => <ScrollView contentContainerStyle={{ paddingBottom: 10}}>
@@ -53,17 +55,15 @@ export default function MypageBoard({ route, navigation }) {
             <Text style={styles.content}>{item.description}</Text>
         </View>
         <TouchableOpacity 
-         style={styles.button} 
-         onPress={() => (useEffect(useCallback(() => {
-            rootContext.api.delete('http://13.209.48.180:8080/api/board/' + item.boardId).then((res) => {
-                setData(data.filter(res => res.boardId != item.boardId))
-                console.log("삭제됨") 
-            }).catch((err) => console.log(err.response.data))
-        }, []), []))}>
-        <Button title="삭제" color='#fff'></Button>
+         style={styles.button}>
+        <Button 
+         title="삭제" 
+         color='#fff'
+         onPress={() => onRemove({boardId: item.boardId, name: item.name})}></Button>
         </TouchableOpacity>
         </View>
-</ScrollView>
+    </ScrollView>
+
     return(
         <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}

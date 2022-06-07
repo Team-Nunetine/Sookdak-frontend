@@ -1,85 +1,79 @@
-import React, { useState} from 'react'
+import React, { useCallback, useEffect, useState} from 'react'
 import { useFocusEffect } from "@react-navigation/native";
-import { SafeAreaView, View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList } from 'react-native'
+import { SafeAreaView, View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { Title } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useRootContext } from '../../RootProvider';
 
-export default function ChettingMain({ route, navigation }) {
-    useFocusEffect(() => {
-        navigation.getParent().setOptions({ swipeEnabled: false })
-    })
+type DataType = {
+    roomId: number,
+    name: string,
+    info: string,
+    users: number,
+    status: boolean
+}
+
+export default function ChettingMain({ navigation }) {
+    
+    const rootContext = useRootContext()
+    const [data, setData] = useState<DataType[]>([])
+    const [refreshing, setRefreshing] = useState(false)
+    
+    const onRefresh = useCallback(() => {}, [])
+
     const listTab = [
         {
-            status: 'MY'
+            status: true,
+            name: 'MY'
         }, 
         {
-            status: '전체'
-        }
-    ]
-    
-    const Data = [
-        {
-            roomName: '시스템종합설계',
-            desc: '시스템종합설계 방입니다.',                
-            people: '22',
-            status: 'MY'
-        },
-        {
-            roomName: '데이터마이닝분석',
-            desc: '데이터마이닝및분석 방입니다.',
-            people: '25',
-            status: 'MY'
-        },
-        {
-            roomName: '융합적사고와글쓰기',
-            desc: '융사글 방입니다.',
-            people: '17',
-            status: 'MY'
-        },
-        {
-            roomName: '데이터사이언스개론',
-            desc: '데사개 방입니다.',
-            people: '16'
-        },
-        {
-            roomName: '데이터베이스프로그래밍',
-            desc: '데베프 방입니다.',
-            people: '23'
+            status: false,
+            name: '전체'
         }
     ]
 
+    const [status, setStatus] = useState(false)
+    const [Datalist, setDatalist] = useState(data)
 
-    const [status, setStatus] = useState('전체')
-    const [Datalist, setDatalist] = useState(Data)
-    
     const setStatusFilter = status => { 
-        if( status !== '전체') {
-            setDatalist([...Data.filter(v => v.status === status)])
+        if( status !== false) {
+            console.log(status)
+            setDatalist([...data.filter(v => v.status === status)])
+            console.log(Datalist)
         } else {
-            setDatalist(Data)
+            setDatalist(data)
         }
         setStatus(status)
     }
 
     const searchRoom = (input) => {
-        let data = Data
-        let searchData = data.filter((item) => {
-            return item.roomName.includes(input)
+        let Data = data
+        let searchData = Data.filter((item) => {
+            return item.name.includes(input)
         });
         setDatalist(searchData)
     }
 
-    const renderItem = ({item, index}) => {
+    useEffect(useCallback(() => {
+        rootContext.api.get('http://3.36.250.198:8080/api/chat/chatroom').then((res) => {
+            setData(res.data.data.chatRooms)
+        }).catch((err) => {
+            console.log(err.response.data)
+        })
+    }, []), [])
+
+    const renderItem = ({item}: {item:DataType}) => {
         return(     
             <TouchableOpacity 
              onPress={() => {
+                 console.log('채팅방')
                  navigation.navigate('ChattingRoom', { 
-                     roomName: item.roomName})}}>
-                <View key={index} style={styles.itemContainer}>
-                    <Text style={styles.roomName}>{item.roomName}</Text>
-                    <Text style={styles.desc}>{item.desc}</Text>
-                    <Text style={styles.people}>{item.people}</Text>
+                     roomName: item.name})}}>
+                <View key={item.roomId} style={styles.itemContainer}>
+                    <Text style={styles.roomName}>{item.name}</Text>
+                    <Text style={styles.desc}>{item.info}</Text>
+                    <Text style={styles.people}>{item.users}</Text>
                 </View>
             </TouchableOpacity>
             )
@@ -99,8 +93,8 @@ export default function ChettingMain({ route, navigation }) {
                     listTab.map(v => (
                         <TouchableOpacity 
                         style={[styles.btnTab, status === v.status && styles.btnTabActive]}
-                        onPress={() => setStatusFilter(v.status)}>
-                            <Text style={styles.textTab}>{v.status}</Text>
+                        onPress={() => {setStatusFilter(v.status)}}>
+                            <Text style={styles.textTab}>{v.name}</Text>
                         </TouchableOpacity>
                     ))
                 }
@@ -119,12 +113,15 @@ export default function ChettingMain({ route, navigation }) {
 
             <FlatList
              data = {Datalist}
-             keyExtractor={(item) => item.toString()}
              renderItem={renderItem}
+             keyExtractor={(item) => item.roomId.toString()}
+             refreshControl={<RefreshControl
+             refreshing={refreshing}
+             progressViewOffset={40}/>}
             />
 
     </SafeAreaView>
-    
+     
     )}
 
 const styles = StyleSheet.create({
@@ -200,7 +197,7 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     people: {
-        fontSize: 10,
+        fontSize: 13,
         color: '#aaa',
         textAlign: 'right',
     },
