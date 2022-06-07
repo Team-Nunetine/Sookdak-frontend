@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { useRootContext } from '../../RootProvider'
 
 export default function MessageSend({ navigation, route }) {
     const [content, setContent] = useState('')
+    const rootContext = useRootContext()
+    
     const onPressSend = () => {
         if (content == '') {
             Alert.alert('확인', '내용을 작성해주세요')
@@ -12,9 +15,18 @@ export default function MessageSend({ navigation, route }) {
         }
         Alert.alert('전송', '쪽지를 전송하겠습니까?', [
             { text: '취소' },
-            { text: '확인', onPress: () => { navigation.goBack() } }
+            {
+                text: '확인', onPress: () => {
+                    rootContext.api.post(route.params.postId ? '/api/message/' + route.params.postId + '/save'
+                        : '/api/message/' + route.params.roomId, { content: content })
+                        .then((res) => console.log(res.data))
+                        .catch((err) => console.log(err.response.data))
+                    navigation.goBack()
+                }
+            }
         ])
     }
+
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <Text style={styles.topText}>쪽지</Text>
         <TouchableOpacity onPress={() => { navigation.goBack() }}

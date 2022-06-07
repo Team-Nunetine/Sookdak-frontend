@@ -4,13 +4,14 @@ import React, { useState } from 'react'
 import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import { useRootContext } from '../../RootProvider'
+import { useHomeContext } from './HomeProvider'
 
 export default function BoardCreation({ navigation }) {
-
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
 
     const rootContext = useRootContext()
+    const homeContext = useHomeContext()
 
     const onPressComplete = () => {
         if (name == '') {
@@ -28,7 +29,16 @@ export default function BoardCreation({ navigation }) {
                             description: description
                         }
                     ).then((res) => {
-                        navigation.pop(2)
+                        rootContext.api.post('/api/star/' + res.data.data.boardId)
+                            .then((res) => {
+                                rootContext.api.get('/api/star')
+                                    .then((res) => {
+                                        homeContext.setBoards(res.data.data.stars)
+                                        navigation.pop(2)
+                                    })
+                                    .catch((err) => console.log(err.response.data))
+                            })
+                            .catch((err) => console.log(err))
                     }).catch((err) => {
                         console.log(err.message)
                         Alert.alert('이미 존재하는 게시판입니다')

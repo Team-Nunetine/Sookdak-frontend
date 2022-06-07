@@ -24,6 +24,13 @@ export default function PostList({ route, navigation }) {
     useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
         navigation.getParent().setOptions({ swipeEnabled: true })
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+            .then((res) => {
+                setData(res.data.data.posts)
+                setPageIndex(1)
+                setLoading(false)
+            })
+            .catch((err) => console.log(err.response.data))
         return () => {
             navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
             navigation.getParent().setOptions({ swipeEnabled: false })
@@ -33,22 +40,28 @@ export default function PostList({ route, navigation }) {
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+            .then((res) => {
+                setData(res.data.data.posts)
+                setPageIndex(1)
+                setLoading(false)
+            })
+            .catch((err) => console.log(err.response.data))
     }, []);
 
     const rootContext = useRootContext()
 
     const [pageIndex, setPageIndex] = useState(0)
 
-    useEffect(useCallback(() => {
-        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
-            .then((res) => {
-                console.log('useEffect')
-                setData(res.data.data.posts)
-                setPageIndex(1)
-                setLoading(false)
-            })
-            .catch((err) => console.log(err.response.data))
-    }, []), [])
+    // useEffect(useCallback(() => {
+    //     rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+    //         .then((res) => {
+    //             setData(res.data.data.posts)
+    //             setPageIndex(1)
+    //             setLoading(false)
+    //         })
+    //         .catch((err) => console.log(err.response.data))
+    // }, []), [])
 
     const onEndReached = () => {
         rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageIndex)
@@ -68,7 +81,11 @@ export default function PostList({ route, navigation }) {
 
     const renderItem = ({ item }: { item: DataType }) => <TouchableOpacity style={styles.contentView}
         onPress={() => {
-            navigation.navigate('PostDetail', { boardName: route.params.boardName, postId: item.postId })
+            navigation.navigate('PostDetail', {
+                boardName: route.params.boardName,
+                boardId: route.params.boardId,
+                postId: item.postId
+            })
         }}>
         <Text style={styles.content} numberOfLines={3}>{item.content}</Text>
         <View style={styles.bottomView}>

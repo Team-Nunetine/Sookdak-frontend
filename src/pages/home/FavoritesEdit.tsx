@@ -1,10 +1,11 @@
 import { useFocusEffect } from '@react-navigation/native'
 import React, { useCallback } from 'react'
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
 import Octicons from 'react-native-vector-icons/Octicons'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useHomeContext } from './HomeProvider'
+import { useRootContext } from '../../RootProvider'
 
 type ItemType = {
     name: string,
@@ -16,8 +17,9 @@ export default function FavoritesEdit({ navigation }) {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
     }, []))
-    
+
     const homeContext = useHomeContext()
+    const rootContext = useRootContext()
 
     const renderItem = ({ item, drag, isActive }: RenderItemParams<ItemType>) => <ScaleDecorator>
         <View style={styles.row}>
@@ -26,7 +28,17 @@ export default function FavoritesEdit({ navigation }) {
                 <Icon name='unfold-more-horizontal' size={14} color='#151515' />
                 <Text style={styles.boardName}>{item.name}</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => Alert.alert('삭제', '즐겨찾기에서 삭제하시겠습니까?', [
+                { text: '취소' },
+                {
+                    text: '확인', onPress: () => rootContext.api.post('/api/star/' + item.boardId)
+                        .then((res) => rootContext.api.get('/api/star')
+                            .then((res) => {
+                                homeContext.setBoards(res.data.data.stars)
+                            })
+                            .catch((err) => console.log(err.response.data)))
+                        .catch((err) => console.log(err.response.data))
+                }])}>
                 <Icon name='minus' size={18} color='#EC454C' style={styles.minusIcon} />
             </TouchableOpacity>
         </View>

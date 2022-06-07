@@ -4,7 +4,7 @@ import axios from 'axios'
 
 export default function getAxiosInstance(token: string) {
     const instance = axios.create({
-        baseURL: "http://13.209.48.180:8080/",
+        baseURL: "http://3.36.250.198:8080/",
         headers: {
             "Content-Type": "application/json",
         },
@@ -27,6 +27,8 @@ export default function getAxiosInstance(token: string) {
             return res;
         },
         async (err) => {
+            console.log('Api.tsx')
+            console.log(err)
             //   const originalConfig = err.config;
             //   if (originalConfig.url !== "/auth/signin" && err.response) {
             //     // Access Token was expired

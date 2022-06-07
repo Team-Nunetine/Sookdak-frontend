@@ -43,6 +43,7 @@ function PostStack() {
         <Stack.Screen name='PostDetail' component={PostDetail} />
         <Stack.Screen name='PostUpload' component={PostUpload} />
         <Stack.Screen name='PostSearch' component={PostSearch} />
+        <Stack.Screen name='MessageSendFromPost' component={MessageSend} />
     </Stack.Navigator>
 }
 
