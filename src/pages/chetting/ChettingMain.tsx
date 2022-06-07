@@ -10,37 +10,37 @@ type DataType = {
     roomId: number,
     name: string,
     info: string,
-    user: number,
+    users: number,
     status: boolean
 }
 
-export default function ChettingMain({ route, navigation }) {
+export default function ChettingMain({ navigation }) {
     
     const rootContext = useRootContext()
     const [data, setData] = useState<DataType[]>([])
     const [refreshing, setRefreshing] = useState(false)
-
+    
     const onRefresh = useCallback(() => {}, [])
-
-    // useFocusEffect(() => {
-    //     navigation.getParent().setOptions({ swipeEnabled: false })
-    // })
 
     const listTab = [
         {
-            status: 'MY'
+            status: true,
+            name: 'MY'
         }, 
         {
-            status: '전체'
+            status: false,
+            name: '전체'
         }
     ]
 
-    const [status, setStatus] = useState('false')
+    const [status, setStatus] = useState(false)
     const [Datalist, setDatalist] = useState(data)
-    
+
     const setStatusFilter = status => { 
-        if( status !== 'false') {
+        if( status !== false) {
+            console.log(status)
             setDatalist([...data.filter(v => v.status === status)])
+            console.log(Datalist)
         } else {
             setDatalist(data)
         }
@@ -48,16 +48,16 @@ export default function ChettingMain({ route, navigation }) {
     }
 
     const searchRoom = (input) => {
-        let searchData = data.filter((item) => {
+        let Data = data
+        let searchData = Data.filter((item) => {
             return item.name.includes(input)
         });
-        setData(searchData)
+        setDatalist(searchData)
     }
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://3.36.250.198:8080/api/chat/chatRoom').then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/chat/chatroom').then((res) => {
             setData(res.data.data.chatRooms)
-            console.log(res.data.data.chatRooms)
         }).catch((err) => {
             console.log(err.response.data)
         })
@@ -73,7 +73,7 @@ export default function ChettingMain({ route, navigation }) {
                 <View key={item.roomId} style={styles.itemContainer}>
                     <Text style={styles.roomName}>{item.name}</Text>
                     <Text style={styles.desc}>{item.info}</Text>
-                    <Text style={styles.people}>{item.user}</Text>
+                    <Text style={styles.people}>{item.users}</Text>
                 </View>
             </TouchableOpacity>
             )
@@ -94,7 +94,7 @@ export default function ChettingMain({ route, navigation }) {
                         <TouchableOpacity 
                         style={[styles.btnTab, status === v.status && styles.btnTabActive]}
                         onPress={() => {setStatusFilter(v.status)}}>
-                            <Text style={styles.textTab}>{v.status}</Text>
+                            <Text style={styles.textTab}>{v.name}</Text>
                         </TouchableOpacity>
                     ))
                 }
@@ -112,7 +112,7 @@ export default function ChettingMain({ route, navigation }) {
             </View>
 
             <FlatList
-             data = {data}
+             data = {Datalist}
              renderItem={renderItem}
              keyExtractor={(item) => item.roomId.toString()}
              refreshControl={<RefreshControl
@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     people: {
-        fontSize: 10,
+        fontSize: 13,
         color: '#aaa',
         textAlign: 'right',
     },
