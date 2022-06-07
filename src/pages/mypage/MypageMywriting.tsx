@@ -38,7 +38,7 @@ export default function MypageMywriting({route, navigation}) {
     const renderItem = ({ item }: { item : DataType }) => <ScrollView>
     <View key={item.postId} style={styles.contentListContainer}>
         <View style={styles.textInputRow}>
-            <TouchableOpacity style={styles.contentView} onPress={() => navigation.navigate('PostDetail', { postId: item.postId })}>
+            <TouchableOpacity style={styles.contentView} onPress={() => {navigation.navigate('PostDetail', { postId: item.postId })}}>
             <Text style={styles.time}>{item.createdAt}</Text>
             <Text style={styles.content}>{item.content}</Text>
             <View style={styles.countView}>

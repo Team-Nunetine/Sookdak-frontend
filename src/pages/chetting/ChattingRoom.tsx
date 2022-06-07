@@ -4,9 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import { GiftedChat, Send } from 'react-native-gifted-chat';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { DrawerActions, useFocusEffect } from "@react-navigation/native";
-import SockJS from 'sockjs-client';
 import { useRootContext } from '../../RootProvider';
-import Stomp from 'stompjs';
 
 export default function ChattingRoom({route, navigation}) {
     // useFocusEffect(() => {
@@ -17,7 +15,7 @@ export default function ChattingRoom({route, navigation}) {
     const rootContext = useRootContext()
     const url = 'ws://3.36.250.198:8080/chat'
     const [Connect, setConnect] = useState(false)
-    let stompClient = Stomp.client(url)
+    // let stompClient = Stomp.client(url)
 
     // const connect = () => {
     //     const socket = new SockJS('http://3.36.250.198:8080/ws-stomp')

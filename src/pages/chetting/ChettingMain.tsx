@@ -40,7 +40,6 @@ export default function ChettingMain({ navigation }) {
         if( status !== false) {
             console.log(status)
             setDatalist([...data.filter(v => v.status === status)])
-            console.log(Datalist)
         } else {
             setDatalist(data)
         }
@@ -117,6 +116,7 @@ export default function ChettingMain({ navigation }) {
              keyExtractor={(item) => item.roomId.toString()}
              refreshControl={<RefreshControl
              refreshing={refreshing}
+             onRefresh={onRefresh}
              progressViewOffset={40}/>}
             />
 
