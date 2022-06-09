@@ -86,7 +86,7 @@ export default function Notice({ navigation, route }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -108,11 +108,11 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#151515',
-        fontSize: 13
+        fontSize: 16
     },
     time: {
         color: '#AFAFAF',
-        fontSize: 10,
+        fontSize: 12,
         textAlign: 'right'
     },
 })

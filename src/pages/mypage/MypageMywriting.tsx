@@ -55,7 +55,7 @@ export default function MypageMywriting({route, navigation}) {
     </View>
     </ScrollView>
 
-    return <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    return <SafeAreaView style={{flex: 1, backgroundColor: 'white', marginTop: 25 }}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20
@@ -101,16 +101,16 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 15
     },
     count: {
-        fontSize: 15,
+        fontSize: 12,
         marginLeft: 2,
         marginRight: 7,
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 11,
         color: '#aaa',
         textAlign: 'right',
         marginTop: 5

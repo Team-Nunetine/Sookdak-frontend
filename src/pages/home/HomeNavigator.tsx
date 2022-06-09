@@ -81,7 +81,7 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                     <Feather name='edit' size={12} /> 편집
                 </Text>
             </TouchableOpacity>
-        </View>
+        </View >
         {boards.map((v, i) => <DrawerItem label={v.name} key={i}
             focused={currentBoard == i}
             activeTintColor='#003087'
@@ -103,14 +103,14 @@ const styles = StyleSheet.create({ // CustomDrawerContent에서만 사용
         flexDirection: 'row',
     },
     title: {
-        fontSize: 14,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         paddingVertical: 15,
         paddingLeft: 15
     },
     edit: {
-        fontSize: 12,
+        fontSize: 16,
         paddingVertical: 15,
         paddingHorizontal: 30
     }

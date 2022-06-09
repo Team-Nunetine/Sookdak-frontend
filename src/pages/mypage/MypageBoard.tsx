@@ -65,7 +65,7 @@ export default function MypageBoard({ route, navigation }) {
     </ScrollView>
 
     return(
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white', marginTop: 25 }}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -86,7 +86,7 @@ export default function MypageBoard({ route, navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20
@@ -108,12 +108,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     boardName: {
-        fontSize: 16,
+        fontSize: 18,
         marginBottom: 5
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 15
     },
     button: {
         backgroundColor: '#AD3E3E',

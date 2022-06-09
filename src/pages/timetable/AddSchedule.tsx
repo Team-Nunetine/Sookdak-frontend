@@ -123,7 +123,7 @@ export default function AddSchedule({ navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -152,15 +152,15 @@ const styles = StyleSheet.create({
     name: {
         color: '#151515',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 18,
     },
     info2: {
         color: '#151515',
-        fontSize: 13
+        fontSize: 15
     },
     info3: {
         color: '#aaa',
-        fontSize: 13
+        fontSize: 15
     },
     row: {
         paddingTop: 10,

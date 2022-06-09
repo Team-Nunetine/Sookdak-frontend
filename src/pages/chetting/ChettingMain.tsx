@@ -36,6 +36,10 @@ export default function ChettingMain({ navigation }) {
     const [status, setStatus] = useState(false)
     const [Datalist, setDatalist] = useState(data)
 
+    useFocusEffect(() => {
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    })
+
     const setStatusFilter = status => { 
         if( status !== false) {
             console.log(status)
@@ -57,6 +61,7 @@ export default function ChettingMain({ navigation }) {
     useEffect(useCallback(() => {
         rootContext.api.get('http://3.36.250.198:8080/api/chat/chatroom').then((res) => {
             setData(res.data.data.chatRooms)
+            setDatalist(res.data.data.chatRooms)
         }).catch((err) => {
             console.log(err.response.data)
         })
@@ -91,6 +96,7 @@ export default function ChettingMain({ navigation }) {
                 {
                     listTab.map(v => (
                         <TouchableOpacity 
+                        key={v.name}
                         style={[styles.btnTab, status === v.status && styles.btnTabActive]}
                         onPress={() => {setStatusFilter(v.status)}}>
                             <Text style={styles.textTab}>{v.name}</Text>
@@ -148,7 +154,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     title: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
         paddingVertical: 20,
         color: '#003087',
@@ -174,7 +180,7 @@ const styles = StyleSheet.create({
         paddingVertical: 7
     },
     textTab: {
-        fontSize: 16
+        fontSize: 18
     },
     btnTabActive: {
         borderBottomColor: '#003087'
@@ -190,14 +196,14 @@ const styles = StyleSheet.create({
     roomName: {
         fontWeight: 'bold',
         color: '#003087',
-        fontSize: 17,
+        fontSize: 18,
     },
     desc: {
-        fontSize: 15,
+        fontSize: 16,
         marginTop: 8
     },
     people: {
-        fontSize: 13,
+        fontSize: 15,
         color: '#aaa',
         textAlign: 'right',
     },

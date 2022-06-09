@@ -67,7 +67,7 @@ export default function BoardSearch({ navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     boardName: {
         color: '#151515',
-        fontSize: 14
+        fontSize: 18
     },
     description: {
         color: '#888888',
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     },
     bottomText: {
         color: '#003087',
-        fontSize: 13,
+        fontSize: 15,
     },
     bottomTouchable: {
         borderColor: '#003087',

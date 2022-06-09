@@ -97,7 +97,7 @@ export default function PostUpload({ route, navigation }) {
         ])
     }
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <View style={styles.topView}>
             <Text style={styles.topText}>{route.params.boardName}</Text>
             <TouchableOpacity onPress={() => navigation.goBack()}
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -199,6 +199,6 @@ const styles = StyleSheet.create({
     },
     completeText: {
         color: '#fff',
-        fontSize: 14
+        fontSize: 16
     }
 })

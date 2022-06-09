@@ -49,7 +49,7 @@ export default function MessageDetail({ navigation, route }) {
             })
     }
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -82,7 +82,7 @@ export default function MessageDetail({ navigation, route }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -121,6 +121,6 @@ const styles = StyleSheet.create({
     },
     time: {
         marginHorizontal: 5,
-        fontSize: 9,
+        fontSize: 12,
     }
 })

@@ -5,20 +5,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Octicons from 'react-native-vector-icons/Octicons';
 
 export default function MypageAlarm({navigation}) {
-    const [isEnabled1, setIsEnabled1] = useState(false);
+    const [isEnabled1, setIsEnabled1] = useState(true);
     const toggleSwitch1 = () => setIsEnabled1(previousState => !previousState);
 
-    const [isEnabled2, setIsEnabled2] = useState(false);
+    const [isEnabled2, setIsEnabled2] = useState(true);
     const toggleSwitch2 = () => setIsEnabled2(previousState => !previousState);
 
-    const [isEnabled3, setIsEnabled3] = useState(false);
+    const [isEnabled3, setIsEnabled3] = useState(true);
     const toggleSwitch3 = () => setIsEnabled3(previousState => !previousState);
     
-    const [isEnabled4, setIsEnabled4] = useState(false);
+    const [isEnabled4, setIsEnabled4] = useState(true);
     const toggleSwitch4 = () => setIsEnabled4(previousState => !previousState);
 
     return(
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white', marginTop: 25 }}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -97,11 +97,11 @@ const styles = StyleSheet.create ({
     },
     bigText: {
         fontWeight: 'bold',
-        fontSize: 17,
+        fontSize: 18,
         paddingBottom: 10,
     },
     smallText: {
-        fontSize: 13,
+        fontSize: 15,
     },
     switch: {
         flexDirection: 'row-reverse',
@@ -113,7 +113,7 @@ const styles = StyleSheet.create ({
         padding: 20
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20

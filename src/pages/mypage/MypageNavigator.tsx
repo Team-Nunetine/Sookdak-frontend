@@ -1,7 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
 import React from 'react'
-import { Text } from 'react-native-paper/lib/typescript/components/Avatar/Avatar'
-import styled from 'styled-components'
 import MypageMain from './MypageMain'
 import MypageAuth from './MypageAuth'
 import MypageLogout from './MypageLogout'

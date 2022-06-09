@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     },
     title: {
         color: '#003087',
-        fontSize: 17,
+        fontSize: 20,
         fontFamily: 'JalnanOTF',
         paddingBottom: 20,
         fontWeight: 'bold',
@@ -112,6 +112,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     content: {
-        fontSize: 15,
+        fontSize: 18,
     }
 });

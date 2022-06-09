@@ -108,7 +108,7 @@ export default function PostList({ route, navigation }) {
             loop
             autoPlay />
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
             style={styles.menuIcon}>
             <Ionicons name='menu-outline' size={25} color='#555' />
@@ -153,7 +153,7 @@ export default function PostList({ route, navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 16
     },
     bottomView: {
         flexDirection: 'row',
@@ -193,13 +193,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     count: {
-        fontSize: 10,
+        fontSize: 12,
         marginLeft: 3,
         marginRight: 8,
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#aaa'
     }
 })

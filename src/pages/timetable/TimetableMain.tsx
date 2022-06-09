@@ -267,7 +267,7 @@ const modalStyles = StyleSheet.create({
     },
     button: {
         color: '#003087',
-        fontSize: 14,
+        fontSize: 16,
         padding: 5
     }
 })

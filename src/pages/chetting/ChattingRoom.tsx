@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View, TextInput, AsyncStorage} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { GiftedChat, Send } from 'react-native-gifted-chat';
+import {GiftedChat, Send} from 'react-native-gifted-chat';
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { DrawerActions, useFocusEffect } from "@react-navigation/native";
 import { useRootContext } from '../../RootProvider';
@@ -112,6 +112,7 @@ export default function ChattingRoom({route, navigation}) {
                 onSend={msg => _onSend(msg)}
                 user={user}
                 renderUsernameOnMessage
+                keyboardShouldPersistTaps={'never'}
                 alwaysShowSend
                 renderSend={renderSend}
                 />
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
         padding: 20
     },
     topText: {
-        fontSize: 16,
+        fontSize: 20,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center'

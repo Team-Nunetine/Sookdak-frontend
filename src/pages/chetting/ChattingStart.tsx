@@ -9,10 +9,10 @@ export default function ChattingStart({ route, navigation }) {
     
     const rootContext = useRootContext()
 
-    // useFocusEffect(() => {
-    //     navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
-    //     navigation.getParent().setOptions({ swipeEnabled: false })
-    // })
+    useFocusEffect(() => {
+        //navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    })
     const [title, setTitle] = useState('')
     const [desc, setDesc] = useState('')
 
@@ -23,8 +23,6 @@ export default function ChattingStart({ route, navigation }) {
         }).then((res) => {
             console.log("성공")
             console.log(res.data.data.roomId)
-            navigation.navigate('ChattingRoom', {roomId: res.data.data.roomId})
-
         }).catch((err) => {
             console.log(err)
         })
@@ -88,7 +86,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30
     },
     textInput: {
-        width: 300,
+        width: 330,
         height: 45,
         marginTop: 20,
         paddingVertical: 10,
@@ -110,13 +108,13 @@ const styles = StyleSheet.create({
         color: '#fff'
     },
     button: {
-        width: 300,
+        width: 330,
         height: 45,
         backgroundColor: '#fff',
         textAlign: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        marginTop: 20,
+        marginTop: 50,
         borderWidth: 1,
         borderRadius: 13,
     }

@@ -54,7 +54,7 @@ export default function MypageMycmt({navigation}) {
 
 </ScrollView>
     return(
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white', marginTop: 25 }}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 16
     },
     count: {
         fontSize: 13,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#aaa',
         textAlign: 'right',
         marginTop: 5

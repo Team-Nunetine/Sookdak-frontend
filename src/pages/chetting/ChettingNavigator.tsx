@@ -6,6 +6,7 @@ import ChattingStart from './ChattingStart'
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer'
 import { Switch, Text, View, StyleSheet } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useRootContext } from '../../RootProvider'
 
 export default function ChettingNavigator({route, navigation}) {
     const Drawer = createDrawerNavigator()
@@ -25,7 +26,7 @@ function ChattingStack() {
 
 function CustomDrawerContent({route, navigation}) {
     const [alarm, setAlarm] = useState(true)
-
+    const rootContext = useRootContext()
     const toggleAlarm = () => setAlarm(!alarm);
     return <DrawerContentScrollView>
         <TouchableOpacity style={styles.container} onPress={() => {navigation.navigate('ChettingMain')}}>

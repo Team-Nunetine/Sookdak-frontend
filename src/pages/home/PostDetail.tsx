@@ -80,14 +80,10 @@ export default function PostDetail({ route, navigation }) {
     useFocusEffect(useCallback(() => {
         navigation.getParent().setOptions({ swipeEnabled: false })
         load(null)
-        Keyboard.addListener('keyboardDidHide', () => {
-            console.log('keyboardDidHide')
-            setCurrentFocusedComment({ commentId: 0 })
+       setCurrentFocusedComment({ commentId: 0 })
             setCommenting(false)
-        })
         return () => {
             navigation.getParent().setOptions({ swipeEnabled: true })
-            Keyboard.removeAllListeners('keyboardDidHide')
         }
     }, []))
 
@@ -221,7 +217,7 @@ export default function PostDetail({ route, navigation }) {
         </View>)}
     </>
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -367,7 +363,7 @@ const createFormData = (text, photo) => {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -378,7 +374,7 @@ const styles = StyleSheet.create({
         paddingTop: 15,
     },
     content: {
-        fontSize: 13,
+        fontSize: 16,
         color: '#151515',
         marginBottom: 5
     },
@@ -393,12 +389,12 @@ const styles = StyleSheet.create({
         paddingTop: 5,
     },
     count: {
-        fontSize: 11,
+        fontSize: 13,
         color: '#333',
         paddingTop: 5
     },
     time: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#aaa',
         textAlign: 'right',
         marginTop: 5
@@ -448,12 +444,12 @@ const commentStyles = StyleSheet.create({
         marginBottom: 2
     },
     name: {
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: 'bold',
         color: '#151515'
     },
     content: {
-        fontSize: 12,
+        fontSize: 14,
         color: '#151515',
         marginBottom: 7
     },
@@ -468,12 +464,12 @@ const commentStyles = StyleSheet.create({
         alignItems: 'center'
     },
     count: {
-        fontSize: 11,
+        fontSize: 12,
         marginLeft: 3,
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 11,
         color: '#aaa'
     },
 })

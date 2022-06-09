@@ -33,7 +33,7 @@ export default function MypageScrap({navigation}) {
         }).catch((err) => console.log(err.response.data))
     },[]),[])
 
-    const renderItem = ({ item } : {item : DataType }) => <ScrollView contentContainerStyle={{ paddingBottom: 10}}>
+    const renderItem = ({ item } : {item : DataType }) => <ScrollView>
     <View key={item.postId} style={styles.contentListContainer}>
         <View style={styles.textInputRow}>
             <TouchableOpacity style={styles.contentView} onPress={() => {navigation.navigate('PostDetail', { postId: item.postId })}}>
@@ -52,7 +52,7 @@ export default function MypageScrap({navigation}) {
 
 </ScrollView>
     return(
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <SafeAreaView style={{flex: 1, backgroundColor: 'white', marginTop: 25 }}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -73,11 +73,11 @@ export default function MypageScrap({navigation}) {
 
 const styles = StyleSheet.create({
     contentListContainer: {
-        marginTop: 20,
+        marginTop: 10,
         marginHorizontal: 10,
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20
@@ -99,16 +99,16 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 15
     },
     count: {
-        fontSize: 13,
+        fontSize: 12,
         marginLeft: 2,
         marginRight: 7,
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#aaa',
         textAlign: 'right',
         marginTop: 5

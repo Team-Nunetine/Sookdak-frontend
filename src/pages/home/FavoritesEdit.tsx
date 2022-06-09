@@ -44,7 +44,7 @@ export default function FavoritesEdit({ navigation }) {
         </View>
     </ScaleDecorator>
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -64,7 +64,7 @@ export default function FavoritesEdit({ navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     },
     boardName: {
         color: '#151515',
-        fontSize: 14,
+        fontSize: 18,
         marginLeft: 15
     },
     minusIcon: {
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 14,
+        fontSize: 16,
         paddingVertical: 8,
         alignSelf: 'center'
     }

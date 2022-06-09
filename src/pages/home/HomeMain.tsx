@@ -46,7 +46,7 @@ export default function HomeMain({ navigation, route }) {
                 console.log(err.response.data)
             })
     }, []))
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25 }}>
         <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
             style={styles.menuIcon}>
             <Ionicons name='menu-outline' size={25} color='#555' />
@@ -95,7 +95,7 @@ export default function HomeMain({ navigation, route }) {
 
 const styles = StyleSheet.create({
     appName: {
-        fontSize: 16,
+        fontSize: 20,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -114,11 +114,11 @@ const styles = StyleSheet.create({
     },
     title: {
         color: '#003087',
-        fontSize: 14,
+        fontSize: 18,
         fontWeight: 'bold'
     },
     contentView: {
-        paddingVertical: 15,
+        paddingVertical: 16,
         paddingHorizontal: 20,
         marginVertical: 3,
         backgroundColor: '#f9f9f9',
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 12
+        fontSize: 15
     },
     countView: {
         flexDirection: 'row',
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         marginTop: 8
     },
     count: {
-        fontSize: 11,
+        fontSize: 12,
         marginLeft: 3,
         marginRight: 8,
         color: '#333'

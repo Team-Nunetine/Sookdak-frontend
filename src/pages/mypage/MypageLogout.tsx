@@ -46,10 +46,11 @@ const ButtonContainer = styled.TouchableOpacity`
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        marginTop: 25 
     },
     title: {
-        fontSize: 21,
+        fontSize: 18,
         textAlign: 'center',
         marginVertical: 20,
         marginHorizontal: 20,
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
         padding: 20
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20

@@ -27,7 +27,7 @@ export default function MessageSend({ navigation, route }) {
         ])
     }
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <Text style={styles.topText}>쪽지</Text>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.closeIcon}>
@@ -42,7 +42,7 @@ export default function MessageSend({ navigation, route }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -64,10 +64,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#003087',
         color: '#fff',
         position: 'absolute',
-        bottom: 20,
-        right: 20,
+        bottom: 30,
+        right: 30,
         paddingHorizontal: 15,
         paddingVertical: 5,
-        borderRadius: 20
+        borderRadius: 20,
+        fontSize: 16
     }
 })
