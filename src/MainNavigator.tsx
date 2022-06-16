@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AuthNavigator from './pages/auth/AuthNavigator'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useRootContext } from './RootProvider'
 import { ParamListBase, RouteProp } from '@react-navigation/native'
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import HomeNavigator from './pages/home/HomeNavigator'
 import ChettingNavigator from './pages/chetting/ChettingNavigator'
 import TimetableNavigator from './pages/timetable/TimetableNavigator'
 import MypageNavigator from './pages/mypage/MypageNavigator'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function MainNavigator() {
     const context = useRootContext()
@@ -19,18 +19,53 @@ export default function MainNavigator() {
             tabBarIcon: ({ focused }: { focused: boolean }) => {
                 const { name } = route
                 return <Ionicons name={foo[name] + (focused ? '' : '-outline')}
-                        size={focused ? 27 : 22}
-                        color={focused ? '#003087' : '#151515'} />
+                    size={focused ? 27 : 22}
+                    color={focused ? '#003087' : '#151515'} />
             },
             tabBarActiveTintColor: '#003087',
             tabBarShowLabel: false,
             tabBarHideOnKeyboard: true
         }
     }
+
+    useEffect(() => {
+        AsyncStorage.getItem('accessToken', (err, accessToken) => {
+            AsyncStorage.getItem('refreshToken', (err, refreshToken) => {
+                if (accessToken && accessToken.length > 0)
+                    context.api.post('/api/user/reissue', {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+                        .then((res) => {
+                            AsyncStorage.setItem('accessToken', res.data.data.accessToken)
+                            AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
+                            context.setUser((prev) => {
+                                const next = JSON.parse(JSON.stringify(prev))
+                                next.token = accessToken
+                                return next
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                            accessToken = ''
+                            context.setUser((prev) => {
+                                const next = JSON.parse(JSON.stringify(prev))
+                                next.token = ''
+                                return next
+                            })
+                        })
+            })
+        })
+    }, [])
+
     if (context.user.token == null || context.user.token == '')
-        return <AuthNavigator/>
+        return <AuthNavigator />
     return <Tab.Navigator screenOptions={scOpt}>
-        <Tab.Screen name='HomeNavigator' component={HomeNavigator} />
+        <Tab.Screen name='HomeNavigator' component={HomeNavigator}
+            listeners={({ navigation }) => ({
+                tabPress: e => navigation.navigate('HomeNavigator',
+                    { screen: 'PostStack', params: { screen: 'HomeMain' } })
+            })} />
         <Tab.Screen name='TimetableNavigator' component={TimetableNavigator} />
         <Tab.Screen name='ChettingNavigator' component={ChettingNavigator} />
         <Tab.Screen name='MypageNavigator' component={MypageNavigator} />

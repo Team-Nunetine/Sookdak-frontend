@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, Alert} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import { useRootContext } from '../../RootProvider';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginPage = ({navigation}: {navigation: any}) => {
 
     useEffect(() => {
         GoogleSignin.configure({
             hostedDomain: 'sookmyung.ac.kr',
-            webClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
+            webClientId: '408906319254-4j4iba8hflj7c5otv9d9rlqmqms2e6v2.apps.googleusercontent.com',
             iosClientId: '408906319254-olb8gjmn67sj345esi10eq6j778kqi6c.apps.googleusercontent.com',
             offlineAccess: true,
             forceCodeForRefreshToken: true,
@@ -18,41 +19,34 @@ const LoginPage = ({navigation}: {navigation: any}) => {
     }, [])
     const rootContext = useRootContext();
 
+
     let accessToken;
     let refreshToken;
 
     const signIn = () => {
         GoogleSignin.signIn().then((googleRes) => {
-        //     console.log(res.user.givenName, res.user.email)
-        //     rootContext.setUser({token: res.idToken, username: res.user.name});
-            axios.post('http://52.78.202.206:8080/api/user/login', {
+            axios.post('http://3.36.250.198:8080/api/user/login', {
                 email: googleRes.user.email
             })
             .then(function (res) {
                 accessToken = res.data.data.accessToken;
-                console.log('accessToken: ' + accessToken)
+                console.log(accessToken)
                 refreshToken = res.data.data.refreshToken;
                 rootContext.setUser({token: res.data.data.accessToken, username: googleRes.user.name});
+                AsyncStorage.setItem('accessToken', res.data.data.accessToken)
+                AsyncStorage.setItem('refreshToken', res.data.data.refreshToken)
             })
             .catch(function(error) {
                 console.log(error);
             });
-            
-            // axios.get('http://52.78.202.206:8080/api/user/me', {
-            //     headers: {
-            //         authorization: `Bearer ${accessToken}`,
-            //     }
-            // })
-            // .then(function (res) {
-            //     console.log(res)
-            // })
-            // .catch(function (err) {
-            //     console.log("왜 에러일까",err)
-            // })
-        }).catch((err) => {
-            console.log(err)
-        });
+    })
     }
+
+    // useEffect(useCallback(() => {
+    //     rootContext.api.get('http://3.36.250.198:8080/api/user/me').then((res) => {
+    //         console.log(res.data.data.email)
+    //     }).catch((err) => console.log(err.response.data))
+    // }, []), [])
 
     return(
         <KeyboardAwareScrollView

@@ -1,7 +1,7 @@
 ---
 name: Issue Template
 about: "이슈 생성 시 사용할 템플릿입니다 \U0001F525"
-title: "[기능] 이슈 설명"
+title: "기능: [탭 명] 이슈 설명"
 labels: ''
 assignees: ''
 

@@ -5,6 +5,7 @@ import styled from 'styled-components/native';
 import Octicons from 'react-native-vector-icons/Octicons'
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { useRootContext } from '../../RootProvider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function MypageWithdrawal({navigation}) {
     const rootContext = useRootContext();
@@ -25,6 +26,7 @@ export default function MypageWithdrawal({navigation}) {
                          GoogleSignin.signOut();
                          console.log('user deleted');
                          rootContext.setUser({user: null})
+                         //내부저장소(AsyncStorage)에서 유저 삭제 api 추가
                     }}/>
                 </ButtonContainer>
                 </View>
@@ -43,10 +45,11 @@ const ButtonContainer = styled.TouchableOpacity`
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        marginTop: 25 
     },
     title: {
-        fontSize: 17,
+        fontSize: 18,
         textAlign: 'center',
         marginVertical: 10,
         marginHorizontal: 20,
@@ -59,7 +62,7 @@ const styles = StyleSheet.create({
         padding: 20
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20

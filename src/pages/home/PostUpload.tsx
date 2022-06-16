@@ -1,23 +1,103 @@
-import React from 'react'
-import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
+import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import AntDesign from 'react-native-vector-icons/AntDesign'
+import { launchImageLibrary } from 'react-native-image-picker'
+import { useRootContext } from '../../RootProvider'
+import axios from 'axios'
+import { useFocusEffect } from '@react-navigation/native'
 
 export default function PostUpload({ route, navigation }) {
+    const [text, setText] = useState('')
+    const [photoList, setPhotoList] = useState<any[]>([])
+    const rootContext = useRootContext()
+
+    useFocusEffect(useCallback(() => {
+        console.log(route.params)
+        if (route.params.postId)
+            rootContext.api.get('/api/post/' + route.params.postId)
+                .then((res) => {
+                    if (res.data.success == false)
+                        Alert.alert('오류', res.data.message)
+                    setText(res.data.data.post.content)
+                    let photoListFromServer: any[] = []
+                    res.data.data.post.images.map((v) => photoListFromServer.push({
+                        fileName: v,
+                        type: 'image/jpeg',
+                        uri: v,
+                    }))
+                    setPhotoList(photoListFromServer)
+                })
+                .catch((err) => console.log(err.response.data))
+    }, []))
+
     const onPressComplete = () => {
-        Alert.alert('완료', '게시글 작성을 완료하겠습니까?',
+        Alert.alert('완료', route.params.postId ? '게시글 수정을 완료하겠습니까?' : '게시글 작성을 완료하겠습니까?',
             [
                 {
                     text: '취소'
                 },
                 {
                     text: '확인', onPress: () => {
-                        navigation.goBack()
+                        console.log(photoList)
+                        fetch(route.params.postId ? ('http://3.36.250.198:8080/api/post/' + route.params.postId)
+                            : ('http://3.36.250.198:8080/api/post/' + route.params.boardId + '/save'), {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                'Authorization': 'Bearer ' + rootContext.user.token
+                            },
+                            body: createFormData(photoList, text),
+                        })
+                            .then((response) => response.json())
+                            .then((res) => {
+                                console.log('성공')
+                                console.log(res)
+                                if (res.success == false) {
+                                    Alert.alert('알림', res.message)
+                                    return
+                                }
+                                navigation.goBack()
+                            })
+                            .catch((err) => console.log(err.response.data))
                     }
                 }
             ]
         )
     }
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    const handleChoosePhoto = () => {
+        if (photoList.length > 9) {
+            Alert.alert('알림', '사진은 10장까지 첨부 가능합니다.')
+            return
+        }
+        launchImageLibrary({ selectionLimit: 1, mediaType: 'photo' }, (response) => {
+            if (response.assets) {
+                setPhotoList((prev) => {
+                    let next = [...prev]
+                    if (response.assets)
+                        next.push(response.assets[0])
+                    return next
+                })
+            }
+        })
+    }
+
+    const deleteImage = (i) => {
+        Alert.alert('삭제', '이 이미지를 삭제하겠습니까?', [
+            { text: '취소' },
+            {
+                text: '확인', onPress: () => {
+                    setPhotoList((prev) => {
+                        let next = [...prev]
+                        next.splice(i, 1)
+                        return next
+                    })
+                }
+            }
+        ])
+    }
+
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <View style={styles.topView}>
             <Text style={styles.topText}>{route.params.boardName}</Text>
             <TouchableOpacity onPress={() => navigation.goBack()}
@@ -25,10 +105,25 @@ export default function PostUpload({ route, navigation }) {
                 <Icon name='close' size={25} color='#151515' />
             </TouchableOpacity>
         </View>
-        <TextInput style={styles.textInput} multiline={true} placeholder='내용을 작성해주세요' />
+        <TextInput style={styles.textInput} multiline={true} placeholder='내용을 작성해주세요'
+            value={text} onChangeText={setText} />
+        <View>
+            <ScrollView horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={{
+                    paddingLeft: 20,
+                    paddingRight: 15,
+                    marginVertical: 15
+                }}>
+                {photoList.map((v, i) => <TouchableOpacity key={i} onLongPress={() => deleteImage(i)}>
+                    <Image
+                        source={{ uri: v.uri }}
+                        style={{ width: 100, height: 100, marginRight: 5 }} />
+                </TouchableOpacity>)}
+            </ScrollView></View>
         <View style={styles.bottomView}>
-            <TouchableOpacity>
-                <Icon name='camera-plus-outline' size={22} color='#151515' />
+            <TouchableOpacity onPress={handleChoosePhoto}>
+                <AntDesign name='addfolder' size={23} color='#151515' />
             </TouchableOpacity>
             <TouchableOpacity style={styles.completeButton}
                 onPress={onPressComplete}>
@@ -36,6 +131,27 @@ export default function PostUpload({ route, navigation }) {
             </TouchableOpacity>
         </View>
     </SafeAreaView>
+}
+
+const createFormData = (photoList, text) => {
+    let data = new FormData()
+
+    data.append('content', text)
+    // data.append('content', new Blob([JSON.stringify(text)], {type: "application/json"}))
+
+    photoList.map((photo) => {
+        data.append('images', {
+            name: photo.fileName,
+            type: photo.type,
+            uri: photo.uri,
+        })
+    })
+
+    // for(let [name, value] of data.entries()) {
+    //     console.log(`${name} = ${value}`); // key1 = value1, then key2 = value2
+    //   }
+
+    return data
 }
 
 const styles = StyleSheet.create({
@@ -46,7 +162,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -60,10 +176,13 @@ const styles = StyleSheet.create({
         right: 0
     },
     textInput: {
-        // backgroundColor: 'red',
         flex: 1,
         textAlignVertical: 'top',
         margin: 20
+    },
+    imageView: {
+        backgroundColor: 'red',
+        flexDirection: 'row'
     },
     bottomView: {
         flexDirection: 'row',
@@ -80,6 +199,6 @@ const styles = StyleSheet.create({
     },
     completeText: {
         color: '#fff',
-        fontSize: 14
+        fontSize: 16
     }
 })

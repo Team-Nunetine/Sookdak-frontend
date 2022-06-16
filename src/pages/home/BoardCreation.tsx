@@ -4,17 +4,14 @@ import React, { useState } from 'react'
 import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import { useRootContext } from '../../RootProvider'
+import { useHomeContext } from './HomeProvider'
 
 export default function BoardCreation({ navigation }) {
-    useFocusEffect(() => {
-        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
-        navigation.getParent().setOptions({ swipeEnabled: false })
-    })
-
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
 
     const rootContext = useRootContext()
+    const homeContext = useHomeContext()
 
     const onPressComplete = () => {
         if (name == '') {
@@ -26,19 +23,22 @@ export default function BoardCreation({ navigation }) {
             {
                 text: '확인',
                 onPress: () => {
-                    axios.post('http://52.78.202.206:8080/api/board/save',
+                    rootContext.api.post('/api/board/save',
                         {
                             name: name,
                             description: description
-                        },
-                        {
-                            headers: {
-                                "Content-Type": "application/json",
-                                "Authorization": 'Bearer ' + rootContext.user.token
-                            }
                         }
                     ).then((res) => {
-                        navigation.pop(2)
+                        rootContext.api.post('/api/star/' + res.data.data.boardId)
+                            .then((res) => {
+                                rootContext.api.get('/api/star')
+                                    .then((res) => {
+                                        homeContext.setBoards(res.data.data.stars)
+                                        navigation.pop(2)
+                                    })
+                                    .catch((err) => console.log(err.response.data))
+                            })
+                            .catch((err) => console.log(err))
                     }).catch((err) => {
                         console.log(err.message)
                         Alert.alert('이미 존재하는 게시판입니다')
@@ -66,7 +66,7 @@ export default function BoardCreation({ navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',

@@ -14,7 +14,8 @@ type DataType = {
     comments: number,
     image: boolean
 }
-export default function MypageMycmt({navigation}) {
+
+export default function MypageScrap({navigation}) {
 
     const rootContext = useRootContext()
     const [pageIndex, setPageIndex] = useState(0)
@@ -22,18 +23,17 @@ export default function MypageMycmt({navigation}) {
     const [refreshing, setRefreshing] = useState(false)
 
     const onRefresh = useCallback(() => {
-    }, []);
+    }, [])
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://3.36.250.198:8080/api/user/mycomment/' + 0).then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/user/myscrap/' + 0).then((res) => {
             setData(res.data.data.posts)
             setPageIndex(1)
-        }).catch((err) => {
-            console.log(err.response.data)
-        })
-    }, []), [])
+            console.log('스크랩 조회')
+        }).catch((err) => console.log(err.response.data))
+    },[]),[])
 
-    const renderItem = ({ item }: {item : DataType }) =>  <ScrollView>
+    const renderItem = ({ item } : {item : DataType }) => <ScrollView>
     <View key={item.postId} style={styles.contentListContainer}>
         <View style={styles.textInputRow}>
             <TouchableOpacity style={styles.contentView} onPress={() => {navigation.navigate('PostDetail', { postId: item.postId })}}>
@@ -44,9 +44,7 @@ export default function MypageMycmt({navigation}) {
                 <Text style={[styles.count, { color: '#AD3E3E' }]}>{item.likes}</Text>
                 <Icon name='comment-processing-outline' size={13} color='#003087' />
                 <Text style={[styles.count, { color: '#003087' }]}>{item.comments}</Text>
-                {item.image ?
-                    <Icon name='image-outline' size={13} color='#333' />
-                    : undefined}
+                <Icon name='image-outline' size={13} color='#333' />
             </View>
         </TouchableOpacity>
         </View>
@@ -59,16 +57,16 @@ export default function MypageMycmt({navigation}) {
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
             </TouchableOpacity>
-            <Text style={styles.topText}>내가 쓴 댓글</Text>
+            <Text style={styles.topText}>스크랩</Text>
             <FlatList
-                data={data}
+                data = {data}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.postId.toString()}
                 refreshControl={<RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 progressViewOffset={40}/>}
-            />
+                />
         </SafeAreaView>
     );
 };
@@ -101,10 +99,10 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 16
+        fontSize: 15
     },
     count: {
-        fontSize: 13,
+        fontSize: 12,
         marginLeft: 2,
         marginRight: 7,
         color: '#333'

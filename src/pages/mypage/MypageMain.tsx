@@ -33,6 +33,14 @@ export default function MypageMain({navigation}: {navigation: any}) {
                 {
                     content: "내가 쓴 댓글",
                     screen: 'MypageMycmt'
+                },
+                {
+                    content: "스크랩",
+                    screen: 'MypageScrap'
+                },
+                {
+                    content: "게시판 관리",
+                    screen: 'MypageBoard'
                 }
             ]
         },
@@ -79,7 +87,7 @@ const styles = StyleSheet.create({
     },
     title: {
         color: '#003087',
-        fontSize: 17,
+        fontSize: 20,
         fontFamily: 'JalnanOTF',
         paddingBottom: 20,
         fontWeight: 'bold',
@@ -104,6 +112,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     content: {
-        fontSize: 15,
+        fontSize: 18,
     }
 });

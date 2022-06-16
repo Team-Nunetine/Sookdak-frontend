@@ -1,64 +1,83 @@
-import React, { useState } from 'react'
-import { SafeAreaView, View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList } from 'react-native'
+import React, { useCallback, useEffect, useState} from 'react'
+import { useFocusEffect } from "@react-navigation/native";
+import { SafeAreaView, View, StyleSheet, Text, Dimensions, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler';
 import { Title } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import Feather from 'react-native-vector-icons/Feather'
-import { color } from 'react-native-elements/dist/helpers';
-import { colors } from 'react-native-elements';
+import { useRootContext } from '../../RootProvider';
 
-export default function ChettingMain(navigation) {
-    const ListTab = [
+type DataType = {
+    roomId: number,
+    name: string,
+    info: string,
+    users: number,
+    status: boolean
+}
+
+export default function ChettingMain({ navigation }) {
+    
+    const rootContext = useRootContext()
+    const [data, setData] = useState<DataType[]>([])
+    const [refreshing, setRefreshing] = useState(false)
+    
+    const onRefresh = useCallback(() => {}, [])
+
+    const listTab = [
         {
-            tabname: 'MY'
-        },
+            status: true,
+            name: 'MY'
+        }, 
         {
-            tabname: '전체'
+            status: false,
+            name: '전체'
         }
     ]
 
-    const data = [
-        {
-            roomName: '시스템종합설계',
-            chat: '팀원 구해요',
-            people: '22'
-        },
-        {
-            roomName: '데이터마이닝분석',
-            chat: '안녕하세요',
-            people: '25'
-        },
-        {
-            roomName: '융합적사고와글쓰기',
-            chat: '과제 있나요',
-            people: '17'
-        },
-        {
-            roomName: '소프트웨어융합특강',
-            chat: '같이 공부 할 사람 구해요',
-            people: '16'
-        },
-    ]
-    const [status, setStatus] = useState('MY')
-    const [datalist, setDatalist] = useState(data)
+    const [status, setStatus] = useState(false)
+    const [Datalist, setDatalist] = useState(data)
 
-    const setStatusFilter = status => { //status는 listTab.tabname
-        if(status !== 'MY') {
-            setDatalist([...data.filter(v => v.roomName === status)])
-        } else { //status === 'MY'
+    useFocusEffect(() => {
+        navigation.getParent().setOptions({ swipeEnabled: false })
+    })
+
+    const setStatusFilter = status => { 
+        if( status !== false) {
+            console.log(status)
+            setDatalist([...data.filter(v => v.status === status)])
+        } else {
             setDatalist(data)
         }
         setStatus(status)
     }
 
-    const renderItem = ({item, index}) => {
+    const searchRoom = (input) => {
+        let Data = data
+        let searchData = Data.filter((item) => {
+            return item.name.includes(input)
+        });
+        setDatalist(searchData)
+    }
+
+    useEffect(useCallback(() => {
+        rootContext.api.get('http://3.36.250.198:8080/api/chat/chatroom').then((res) => {
+            setData(res.data.data.chatRooms)
+            setDatalist(res.data.data.chatRooms)
+        }).catch((err) => {
+            console.log(err.response.data)
+        })
+    }, []), [])
+
+    const renderItem = ({item}: {item:DataType}) => {
         return(     
             <TouchableOpacity 
-             onPress={() => {navigation.navigate('ChattingRoom')}}>
-                <View key={index} style={styles.itemContainer}>
-                    <Text style={styles.roomName}>{item.roomName}</Text>
-                    <Text style={styles.chat}>{item.chat}</Text>
-                    <Text style={styles.people}>{item.people}</Text>
+             onPress={() => {
+                 console.log('채팅방')
+                 navigation.navigate('ChattingRoom', { 
+                     roomName: item.name})}}>
+                <View key={item.roomId} style={styles.itemContainer}>
+                    <Text style={styles.roomName}>{item.name}</Text>
+                    <Text style={styles.desc}>{item.info}</Text>
+                    <Text style={styles.people}>{item.users}</Text>
                 </View>
             </TouchableOpacity>
             )
@@ -66,30 +85,49 @@ export default function ChettingMain(navigation) {
     
     return (
         <SafeAreaView style={styles.container}>
-            <Title style={styles.title}>대화</Title>
-            <TouchableOpacity
-             onPress={() => {}}>
-                <Ionicons name=''/>
-            </TouchableOpacity>
+            <View style={styles.iconContainer}>
+                <View/>
+                <Title style={styles.title}>대화</Title>
+                <TouchableOpacity onPress={() => navigation.navigate('ChattingStart')}>
+                    <Ionicons style={styles.icon} name='add-circle-outline' size={28} color='#555'/>
+                </TouchableOpacity>
+            </View>
             <View style={styles.listTab}>
                 {
-                    ListTab.map(v => (
+                    listTab.map(v => (
                         <TouchableOpacity 
-                        style={[styles.btnTab, status === v.tabname && styles.btnTabActive]}
-                        onPress={() => setStatusFilter(v.tabname)}>
-                            <Text style={styles.textTab}>{v.tabname}</Text>
+                        key={v.name}
+                        style={[styles.btnTab, status === v.status && styles.btnTabActive]}
+                        onPress={() => {setStatusFilter(v.status)}}>
+                            <Text style={styles.textTab}>{v.name}</Text>
                         </TouchableOpacity>
                     ))
                 }
             </View>
-            
+            <View style={styles.textInputRow}>
+                <TextInput
+                 style={styles.textInput}
+                 placeholder='채팅방 검색'
+                 onChangeText={(input) => {
+                    searchRoom(input)
+                }}/>
+                <TouchableOpacity>
+                    <Ionicons name='search' size={25} color='#555' />
+                </TouchableOpacity>
+            </View>
+
             <FlatList
-             data = {datalist}
-             keyExtractor={(v, i) => i.toString()}
+             data = {Datalist}
              renderItem={renderItem}
+             keyExtractor={(item) => item.roomId.toString()}
+             refreshControl={<RefreshControl
+             refreshing={refreshing}
+             onRefresh={onRefresh}
+             progressViewOffset={40}/>}
             />
+
     </SafeAreaView>
-    
+     
     )}
 
 const styles = StyleSheet.create({
@@ -99,10 +137,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
     listTab: {
-        padding: 15,
+        padding: 5,
         flexDirection: 'row',
-        alignSelf: 'center',
-        marginBottom: 20
+        alignSelf: 'center'
+    },
+    iconContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around'
     },
     btnTab: {
         width: Dimensions.get('window').width / 2.0,
@@ -113,23 +154,33 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     title: {
-        fontSize: 16,
+        fontSize: 20,
         fontWeight: 'bold',
-        alignSelf: 'center',
         paddingVertical: 20,
         color: '#003087',
+        alignSelf: 'center'
+    },
+    icon: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        padding: 20
+    },
+    textInputRow: {
+        backgroundColor: '#f5f5f5',
+        marginHorizontal: 20,
+        marginVertical: 10,
+        borderRadius: 10,
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 15
     },
     textInput: {
-        width: '100%',
-        height: '60px',
-        margin: '3px 0',
-        padding: '15pt 20pt',
-        borderRadius: 10,
-        backgroundColor: '#e3e3e3' ,
-        fontSize: 20,
+        flex: 1,
+        paddingVertical: 7
     },
     textTab: {
-        fontSize: 16
+        fontSize: 18
     },
     btnTabActive: {
         borderBottomColor: '#003087'
@@ -143,15 +194,16 @@ const styles = StyleSheet.create({
         padding: 15
     },
     roomName: {
+        fontWeight: 'bold',
         color: '#003087',
-        fontSize: 17,
+        fontSize: 18,
     },
-    chat: {
-        fontSize: 15,
+    desc: {
+        fontSize: 16,
         marginTop: 8
     },
     people: {
-        fontSize: 10,
+        fontSize: 15,
         color: '#aaa',
         textAlign: 'right',
     },

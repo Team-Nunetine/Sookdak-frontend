@@ -1,10 +1,9 @@
 import { useFocusEffect } from '@react-navigation/native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useRootContext } from '../../RootProvider'
-import axios from 'axios'
 
 type ResultItemType = {
     name: string,
@@ -13,21 +12,34 @@ type ResultItemType = {
 }
 
 export default function BoardSearch({ navigation }) {
-    useFocusEffect(() => {
-        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
-        navigation.getParent().setOptions({ swipeEnabled: false })
-    })
     const [result, setResult] = useState<ResultItemType[]>([])
+    const [allBoards, setAllBoards] = useState<ResultItemType[]>([])
     const [value, setValue] = useState('')
 
+    const rootContext = useRootContext()
+
+    useFocusEffect(useCallback(() => {
+        rootContext.api.get('/api/board')
+            .then((res) => {
+                setAllBoards(res.data.data.boards)
+                setResult(res.data.data.boards)
+            }).catch((err) => console.log(err))
+    }, []))
+
+    const onChange = ({ nativeEvent }) => {
+        setResult(allBoards.filter(board => board.name.includes(nativeEvent.text)
+            || board.description.includes(nativeEvent.text)))
+    }
+
     const renderItem = ({ item }: { item: ResultItemType }) => <TouchableOpacity
-        onPress={() => navigation.navigate('BoardPreview', { boardName: item.name })}
+        onPress={() => navigation.navigate('BoardPreview', {
+            boardName: item.name,
+            boardId: item.boardId
+        })}
         style={styles.row}>
         <Text style={styles.boardName}>{item.name}</Text>
         <Text style={styles.description}>{item.description}</Text>
     </TouchableOpacity>
-
-    const rootContext = useRootContext()
 
     return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
@@ -37,11 +49,9 @@ export default function BoardSearch({ navigation }) {
         <Text style={styles.topText}>게시판 검색</Text>
         <View style={styles.searchView}>
             <TextInput style={styles.textInput}
-                onEndEditing={() => search(value, setResult, rootContext.user.token)}
+                onChange={onChange}
                 value={value} onChangeText={setValue} />
-            <TouchableOpacity onPress={() => search(value, setResult, rootContext.user.token)}>
-                <Icon name='magnify' size={20} color='#151515' />
-            </TouchableOpacity>
+            <Icon name='magnify' size={20} color='#151515' />
         </View>
         <FlatList
             data={result}
@@ -55,24 +65,9 @@ export default function BoardSearch({ navigation }) {
     </SafeAreaView>
 }
 
-function search(boardName: string, setResult, token) {
-    axios.get('http://52.78.202.206:8080/api/board', {
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": 'Bearer ' + token
-        }
-    }).then((res) => {
-        setResult(res.data.data.boards)
-    }).catch((err) => console.log(err))
-    // setResult([{ boardName: boardName, description: '게시판 설명', id: '1' },
-    // { boardName: boardName + '2', description: '게시판 설명2', id: '2' },
-    // { boardName: boardName + '3', description: '게시판 설명3', id: '3' },
-    // { boardName: boardName + '4', description: '게시판 설명4', id: '4' }])
-}
-
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -104,7 +99,7 @@ const styles = StyleSheet.create({
     },
     boardName: {
         color: '#151515',
-        fontSize: 14
+        fontSize: 18
     },
     description: {
         color: '#888888',
@@ -112,7 +107,7 @@ const styles = StyleSheet.create({
     },
     bottomText: {
         color: '#003087',
-        fontSize: 13,
+        fontSize: 15,
     },
     bottomTouchable: {
         borderColor: '#003087',

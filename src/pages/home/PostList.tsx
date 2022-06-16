@@ -1,45 +1,114 @@
-import { DrawerActions, useNavigation } from '@react-navigation/native'
-import React, { useCallback, useState } from 'react'
+import { DrawerActions, useFocusEffect } from '@react-navigation/native'
+import React, { useCallback, useEffect, useState } from 'react'
 import { FlatList, RefreshControl, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Octicons from 'react-native-vector-icons/Octicons'
+import { useRootContext } from '../../RootProvider'
+import LottieView from 'lottie-react-native'
+
+type DataType = {
+    postId: number,
+    content: string,
+    createdAt: string,
+    likes: number,
+    comments: number,
+    image: boolean
+}
 
 export default function PostList({ route, navigation }) {
-    const [data, setData] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => ({
-        id: v.toString(),
-        content: v % 3 ? '게시글 내용' + v : '게시글 내용' + v + '\n최대\n3줄까지\n보여지기',
-        likeCount: 10,
-        commentCount: 2,
-        image: v % 3 ? true : false,
-        time: '01/01 14:00',
-    })))
+    const [data, setData] = useState<DataType[]>([])
+
+    const [loading, setLoading] = useState(true)
+
+    useFocusEffect(useCallback(() => {
+        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
+        navigation.getParent().setOptions({ swipeEnabled: true })
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+            .then((res) => {
+                setData(res.data.data.posts)
+                setPageIndex(1)
+                setLoading(false)
+            })
+            .catch((err) => console.log(err.response.data))
+        return () => {
+            navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
+            navigation.getParent().setOptions({ swipeEnabled: false })
+        }
+    }, []))
 
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+            .then((res) => {
+                setData(res.data.data.posts)
+                setPageIndex(1)
+                setLoading(false)
+            })
+            .catch((err) => console.log(err.response.data))
     }, []);
 
-    const renderItem = ({ item }) => <TouchableOpacity style={styles.contentView}
+    const rootContext = useRootContext()
+
+    const [pageIndex, setPageIndex] = useState(0)
+
+    // useEffect(useCallback(() => {
+    //     rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+    //         .then((res) => {
+    //             setData(res.data.data.posts)
+    //             setPageIndex(1)
+    //             setLoading(false)
+    //         })
+    //         .catch((err) => console.log(err.response.data))
+    // }, []), [])
+
+    const onEndReached = () => {
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageIndex)
+            .then((res) => {
+                console.log('onEndReached called')
+                console.log(pageIndex)
+                setData((prev) => {
+                    let next = [...prev]
+                    next.push(...res.data.data.posts)
+                    return next
+                })
+                if (res.data.data.posts.length > 0)
+                    setPageIndex((prev) => prev + 1)
+            })
+            .catch((err) => console.log(err.response.data))
+    }
+
+    const renderItem = ({ item }: { item: DataType }) => <TouchableOpacity style={styles.contentView}
         onPress={() => {
-            navigation.navigate('PostDetail', { boardName: route.params.boardName })
+            navigation.navigate('PostDetail', {
+                boardName: route.params.boardName,
+                boardId: route.params.boardId,
+                postId: item.postId
+            })
         }}>
         <Text style={styles.content} numberOfLines={3}>{item.content}</Text>
         <View style={styles.bottomView}>
             <View style={styles.countView}>
                 <Ionicons name='heart-outline' size={12} color='#AD3E3E' />
-                <Text style={[styles.count, { color: '#AD3E3E' }]}>{item.likeCount}</Text>
+                <Text style={[styles.count, { color: '#AD3E3E' }]}>{item.likes}</Text>
                 <Ionicons name='chatbox-ellipses-outline' size={12} color='#003087' />
-                <Text style={[styles.count, { color: '#003087' }]}>{item.commentCount}</Text>
+                <Text style={[styles.count, { color: '#003087' }]}>{item.comments}</Text>
                 {item.image ?
                     <Feather name='paperclip' size={10} color='#333' />
                     : undefined}
             </View>
-            <Text style={styles.time}>{item.time}</Text>
+            <Text style={styles.time}>{item.createdAt}</Text>
         </View>
     </TouchableOpacity>
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    if (loading)
+        return <LottieView
+            source={require('../../../assets/lottie/loading.json')}
+            loop
+            autoPlay />
+
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <TouchableOpacity onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }}
             style={styles.menuIcon}>
             <Ionicons name='menu-outline' size={25} color='#555' />
@@ -52,13 +121,14 @@ export default function PostList({ route, navigation }) {
         <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.postId.toString()}
             refreshControl={<RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 progressViewOffset={40}
             />}
             contentContainerStyle={{ paddingHorizontal: 20 }}
+            onEndReached={onEndReached}
         />
         <TouchableOpacity style={{
             backgroundColor: '#fff',
@@ -72,7 +142,10 @@ export default function PostList({ route, navigation }) {
             alignItems: 'center',
             justifyContent: 'center'
         }}
-            onPress={() => navigation.navigate('PostUpload', { boardName: route.params.boardName })}>
+            onPress={() => navigation.navigate('PostUpload', {
+                boardName: route.params.boardName,
+                boardId: route.params.boardId
+            })}>
             <Octicons name='pencil' size={20} color='#333' />
         </TouchableOpacity>
     </SafeAreaView>
@@ -80,7 +153,7 @@ export default function PostList({ route, navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -107,7 +180,7 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 16
     },
     bottomView: {
         flexDirection: 'row',
@@ -120,13 +193,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     count: {
-        fontSize: 10,
+        fontSize: 12,
         marginLeft: 3,
         marginRight: 8,
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#aaa'
     }
 })

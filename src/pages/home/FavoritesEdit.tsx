@@ -1,41 +1,50 @@
 import { useFocusEffect } from '@react-navigation/native'
-import React from 'react'
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useCallback } from 'react'
+import { Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import DraggableFlatList, { RenderItemParams, ScaleDecorator } from 'react-native-draggable-flatlist'
 import Octicons from 'react-native-vector-icons/Octicons'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import { useHomeContext } from './HomeProvider'
+import { useRootContext } from '../../RootProvider'
 
 type ItemType = {
-    boardName: string,
-    id: string
+    name: string,
+    boardId: number
 }
 
 export default function FavoritesEdit({ navigation }) {
-    useFocusEffect(() => {
+    useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
-        return () => {
-            navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
-            navigation.getParent().setOptions({ swipeEnabled: true })
-        }
-    })
+    }, []))
+
     const homeContext = useHomeContext()
+    const rootContext = useRootContext()
 
     const renderItem = ({ item, drag, isActive }: RenderItemParams<ItemType>) => <ScaleDecorator>
         <View style={styles.row}>
             <TouchableOpacity disabled={isActive}
                 onLongPress={drag} style={styles.touchableOpacity}>
                 <Icon name='unfold-more-horizontal' size={14} color='#151515' />
-                <Text style={styles.boardName}>{item.boardName}</Text>
+                <Text style={styles.boardName}>{item.name}</Text>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => Alert.alert('삭제', '즐겨찾기에서 삭제하시겠습니까?', [
+                { text: '취소' },
+                {
+                    text: '확인', onPress: () => rootContext.api.post('/api/star/' + item.boardId)
+                        .then((res) => rootContext.api.get('/api/star')
+                            .then((res) => {
+                                homeContext.setBoards(res.data.data.stars)
+                            })
+                            .catch((err) => console.log(err.response.data)))
+                        .catch((err) => console.log(err.response.data))
+                }])}>
                 <Icon name='minus' size={18} color='#EC454C' style={styles.minusIcon} />
             </TouchableOpacity>
         </View>
     </ScaleDecorator>
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
@@ -45,7 +54,7 @@ export default function FavoritesEdit({ navigation }) {
             data={homeContext.boards}
             renderItem={renderItem}
             onDragEnd={({ data }) => homeContext.setBoards(data)}
-            keyExtractor={(item) => item.id} />
+            keyExtractor={(item) => item.boardId.toString()} />
         <TouchableOpacity style={styles.bottomButton}
             onPress={() => navigation.navigate('BoardSearch')}>
             <Text style={styles.buttonText}>게시판 검색</Text>
@@ -55,7 +64,7 @@ export default function FavoritesEdit({ navigation }) {
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -82,7 +91,7 @@ const styles = StyleSheet.create({
     },
     boardName: {
         color: '#151515',
-        fontSize: 14,
+        fontSize: 18,
         marginLeft: 15
     },
     minusIcon: {
@@ -96,7 +105,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: '#fff',
-        fontSize: 14,
+        fontSize: 16,
         paddingVertical: 8,
         alignSelf: 'center'
     }

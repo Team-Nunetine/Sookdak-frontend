@@ -5,28 +5,39 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import Octicons from 'react-native-vector-icons/Octicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { useRootContext } from '../../RootProvider'
+import { useHomeContext } from './HomeProvider'
 
-export default function PostList({ route, navigation }) {
-    useFocusEffect(() => {
-        navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
-        navigation.getParent().setOptions({ swipeEnabled: false })
-    })
+type DataType = {
+    postId: number,
+    content: string,
+    createdAt: string,
+    likes: number,
+    comments: number,
+    image: boolean
+}
 
-    const [data, setData] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((v) => ({
-        id: v.toString(),
-        content: v % 3 ? '게시글 내용' + v : '게시글 내용' + v + '\n최대\n3줄까지\n보여지기',
-        likeCount: 10,
-        commentCount: 2,
-        image: v % 3 ? true : false,
-        time: '01/01 14:00',
-    })))
+export default function BoardPreview({ route, navigation }) {
+    const [data, setData] = useState<DataType[]>([])
+    const [scrap, setScrap] = useState(false)
+    const rootContext = useRootContext()
+    const homeContext = useHomeContext()
+
+    let pageNumber = 0
+
+    useFocusEffect(useCallback(() => {
+        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageNumber)
+            .then((res) => {
+                setData(res.data.data.posts)
+                setScrap(res.data.data.star)
+                ++pageNumber
+            })
+    }, []))
 
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
     }, []);
-
-    const [scrap, setScrap] = useState(false)
 
     const onPressScrap = () => {
         Alert.alert(scrap ? '즐겨찾기 해제' : '즐겨찾기',
@@ -36,25 +47,34 @@ export default function PostList({ route, navigation }) {
                 {
                     text: '확인',
                     onPress: () => {
-                        setScrap((prev) => !prev)
+                        rootContext.api.post('/api/star/' + route.params.boardId)
+                            .then((res) => {
+                                setScrap((prev) => !prev)
+                                rootContext.api.get('/api/star')
+                                    .then((res) => {
+                                        homeContext.setBoards(res.data.data.stars)
+                                    })
+                                    .catch((err) => console.log(err.response.data))
+                            })
+                            .catch((err) => console.log(err))
                     }
                 }
             ])
     }
 
-    const renderItem = ({ item }) => <View style={styles.contentView}>
+    const renderItem = ({ item }: { item: DataType }) => <View style={styles.contentView}>
         <Text style={styles.content} numberOfLines={3}>{item.content}</Text>
         <View style={styles.bottomView}>
             <View style={styles.countView}>
                 <Ionicons name='heart-outline' size={12} color='#AD3E3E' />
-                <Text style={[styles.count, { color: '#AD3E3E' }]}>{item.likeCount}</Text>
+                <Text style={[styles.count, { color: '#AD3E3E' }]}>{item.likes}</Text>
                 <Ionicons name='chatbox-ellipses-outline' size={12} color='#003087' />
-                <Text style={[styles.count, { color: '#003087' }]}>{item.commentCount}</Text>
+                <Text style={[styles.count, { color: '#003087' }]}>{item.comments}</Text>
                 {item.image ?
                     <Feather name='paperclip' size={10} color='#333' />
                     : undefined}
             </View>
-            <Text style={styles.time}>{item.time}</Text>
+            <Text style={styles.time}>{item.createdAt}</Text>
         </View>
     </View>
 
@@ -71,20 +91,21 @@ export default function PostList({ route, navigation }) {
         <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.postId.toString()}
             refreshControl={<RefreshControl
                 refreshing={refreshing}
                 onRefresh={onRefresh}
                 progressViewOffset={40}
             />}
             contentContainerStyle={{ paddingHorizontal: 20 }}
+            onEndReached={() => { }}
         />
     </SafeAreaView>
 }
 
 const styles = StyleSheet.create({
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         alignSelf: 'center',
@@ -111,7 +132,7 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 16
     },
     bottomView: {
         flexDirection: 'row',
@@ -124,13 +145,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     count: {
-        fontSize: 10,
+        fontSize: 12,
         marginLeft: 3,
         marginRight: 8,
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 12,
         color: '#aaa'
     }
 })

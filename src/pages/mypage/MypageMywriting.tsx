@@ -1,82 +1,85 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { Text, StyleSheet, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
+import axios from 'axios';
+import { useRootContext } from '../../RootProvider';
+import { FlatList } from 'react-native-gesture-handler';
+
+type DataType = {
+    postId: number,
+    content: string,
+    createdAt: string,
+    likes: number,
+    comments: number,
+    images: boolean
+}
 
 export default function MypageMywriting({route, navigation}) {
-    const [data, setDate] = useState([
-        {
-            contentList: [
-                {
-                    content: '게시글 내용1',
-                    likeCount: 12,
-                    commentCount: 5,
-                    image: true,
-                    time: '03/10 16:25'
-                },
-                {
-                    content: '게시글 내용2',
-                    likeCount: 12,
-                    commentCount: 5,
-                    image: false,
-                    time: '03/10 16:25'
-                },
-                {
-                    content: '게시글 내용3',
-                    likeCount: 12,
-                    commentCount: 5,
-                    image: true,
-                    time: '03/10 16:25'
-                },
-                {
-                    content: '게시글 내용4',
-                    likeCount: 12,
-                    commentCount: 5,
-                    image: true,
-                    time: '03/10 16:25'
-                }
-            ]
-        },
-    ])
-    return(
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+
+    const rootContext = useRootContext()
+    const [pageIndex, setPageIndex] = useState(0)
+    const [data, setData] = useState<DataType[]>([])
+    // const [dataGet, setDataGet] = useState<DataType[]>([])
+    const [refreshing, setRefreshing] = useState(false)
+    
+    const onRefresh = useCallback(() => {
+    }, []);    
+
+    useEffect(useCallback(() => {
+        rootContext.api.get('http://3.36.250.198:8080/api/user/mypost/' + 0).then((res) => {
+            setData(res.data.data.posts)
+            setPageIndex(1)
+            console.log(res.data.data.posts.postId)
+        }).catch((err) => console.log(err.response.data))
+        }, []), []) 
+    
+    const renderItem = ({ item }: { item : DataType }) => <ScrollView>
+    <View key={item.postId} style={styles.contentListContainer}>
+        <View style={styles.textInputRow}>
+            <TouchableOpacity style={styles.contentView} onPress={() => {navigation.navigate('PostDetail', { postId: item.postId })}}>
+            <Text style={styles.time}>{item.createdAt}</Text>
+            <Text style={styles.content}>{item.content}</Text>
+            <View style={styles.countView}>
+                <Icon name='thumb-up-outline' size={13} color='#AD3E3E' />
+                <Text style={[styles.count, { color: '#AD3E3E' }]}>{item.likes}</Text>
+                <Icon name='comment-processing-outline' size={13} color='#003087' />
+                <Text style={[styles.count, { color: '#003087' }]}>{item.comments}</Text>
+                {item.images ?
+                    <Icon name='image-outline' size={13} color='#333' />
+                    : undefined}
+            </View>
+        </TouchableOpacity>
+        </View>
+    </View>
+    </ScrollView>
+
+    return <SafeAreaView style={{flex: 1, backgroundColor: 'white', marginTop: 25 }}>
             <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.backIcon}>
             <Octicons name='chevron-left' size={22} color='#555' />
             </TouchableOpacity>
             <Text style={styles.topText}>내가 쓴 글</Text>
-            <ScrollView contentContainerStyle={{ paddingBottom: 10}}>
-                {data.map((v, i) => <View key={i} style={styles.contentListContainer}>
-                    {v.contentList.map((content, j) => <View style={styles.textInputRow}>
-                        <TouchableOpacity style={styles.contentView} key={j} onPress={() => {}}>
-                        <Text style={styles.time}>{content.time}</Text>
-                        <Text style={styles.content}>{content.content}</Text>
-                        <View style={styles.countView}>
-                            <Icon name='thumb-up-outline' size={13} color='#AD3E3E' />
-                            <Text style={[styles.count, { color: '#AD3E3E' }]}>{content.likeCount}</Text>
-                            <Icon name='comment-processing-outline' size={13} color='#003087' />
-                            <Text style={[styles.count, { color: '#003087' }]}>{content.commentCount}</Text>
-                            {content.image ?
-                                <Icon name='image-outline' size={13} color='#333' />
-                                : undefined}
-                        </View>
-                    </TouchableOpacity>
-                    </View>)}
-                </View>)}
-
-            </ScrollView>
+            <FlatList
+                data = {data}
+                renderItem={renderItem}
+                keyExtractor={(item) => item.postId.toString()}
+                refreshControl={<RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                progressViewOffset={40}/>}
+                />
         </SafeAreaView>
-    );
 };
 
 const styles = StyleSheet.create({
     contentListContainer: {
-        marginTop: 20,
+        marginTop: 10,
         marginHorizontal: 10,
     },
     topText: {
-        fontSize: 16,
+        fontSize: 18,
         fontWeight: 'bold',
         alignSelf: 'center',
         paddingVertical: 20
@@ -98,16 +101,16 @@ const styles = StyleSheet.create({
     },
     content: {
         color: '#333',
-        fontSize: 13
+        fontSize: 15
     },
     count: {
-        fontSize: 15,
+        fontSize: 12,
         marginLeft: 2,
         marginRight: 7,
         color: '#333'
     },
     time: {
-        fontSize: 10,
+        fontSize: 11,
         color: '#aaa',
         textAlign: 'right',
         marginTop: 5

@@ -9,6 +9,9 @@ import BoardSearch from './BoardSearch'
 import FavoritesEdit from './FavoritesEdit'
 import HomeMain from './HomeMain'
 import { HomeProvider, useHomeContext } from './HomeProvider'
+import MessageDetail from './MessageDetail'
+import MessageSend from './MessageSend'
+import Notice from './Notice'
 import PostDetail from './PostDetail'
 import PostList from './PostList'
 import PostSearch from './PostSearch'
@@ -25,6 +28,7 @@ export default function HomeNavigator() {
             (PostDetail에서 뒤로가기하면 PostList 뜨는 문제) 해결됨 */}
             <Drawer.Screen name='PostStack' component={PostStack} />
             <Drawer.Screen name='FavoritesStack' component={FavoritesStack} />
+            <Drawer.Screen name='NoticeStack' component={NoticeStack} />
         </Drawer.Navigator>
     </HomeProvider>
 }
@@ -39,6 +43,7 @@ function PostStack() {
         <Stack.Screen name='PostDetail' component={PostDetail} />
         <Stack.Screen name='PostUpload' component={PostUpload} />
         <Stack.Screen name='PostSearch' component={PostSearch} />
+        <Stack.Screen name='MessageSendFromPost' component={MessageSend} />
     </Stack.Navigator>
 }
 
@@ -54,6 +59,16 @@ function FavoritesStack() {
     </Stack.Navigator>
 }
 
+function NoticeStack() {
+    const Stack = createStackNavigator()
+    return <Stack.Navigator
+        screenOptions={{ headerShown: false, animationEnabled: false }}>
+        <Stack.Screen name='Notice' component={Notice} />
+        <Stack.Screen name='MessageDetail' component={MessageDetail} />
+        <Stack.Screen name='MessageSend' component={MessageSend} />
+    </Stack.Navigator>
+}
+
 function CustomDrawerContent(props: DrawerContentComponentProps) {
     const { boards, currentBoard, setCurrentBoard } = useHomeContext()
     return <DrawerContentScrollView {...props}>
@@ -66,15 +81,15 @@ function CustomDrawerContent(props: DrawerContentComponentProps) {
                     <Feather name='edit' size={12} /> 편집
                 </Text>
             </TouchableOpacity>
-        </View>
-        {boards.map((v, i) => <DrawerItem label={v.boardName} key={i}
+        </View >
+        {boards.map((v, i) => <DrawerItem label={v.name} key={i}
             focused={currentBoard == i}
             activeTintColor='#003087'
             onPress={() => {
                 setCurrentBoard(i)
                 props.navigation.navigate('PostStack', {
                     screen: 'PostList',
-                    params: { boardName: v.boardName }
+                    params: { boardName: v.name, boardId: v.boardId }
                 })
             }} />
         )}
@@ -88,14 +103,14 @@ const styles = StyleSheet.create({ // CustomDrawerContent에서만 사용
         flexDirection: 'row',
     },
     title: {
-        fontSize: 14,
+        fontSize: 18,
         color: '#003087',
         fontWeight: 'bold',
         paddingVertical: 15,
         paddingLeft: 15
     },
     edit: {
-        fontSize: 12,
+        fontSize: 16,
         paddingVertical: 15,
         paddingHorizontal: 30
     }
