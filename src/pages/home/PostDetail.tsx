@@ -1,6 +1,6 @@
 import { useFocusEffect } from '@react-navigation/native'
 import React, { createRef, useCallback, useEffect, useRef, useState } from 'react'
-import { Alert, Image, Keyboard, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, Keyboard, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Octicons from 'react-native-vector-icons/Octicons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -256,6 +256,9 @@ export default function PostDetail({ route, navigation }) {
             </View>
             {commentsData.map((v, i) => <Comment v={v} key={i} />)}
         </ScrollView>
+        <KeyboardAvoidingView
+        behavior={"padding"}
+        keyboardVerticalOffset={20}>
         <View style={styles.textInputRow}>
             <TouchableOpacity onPress={handleChoosePhoto}>
                 <Ionicons name='camera-outline' size={22} color='#151515' />
@@ -274,6 +277,7 @@ export default function PostDetail({ route, navigation }) {
                     <Ionicons name='send-outline' size={22} color='#151515' />}
             </TouchableOpacity>
         </View>
+        </KeyboardAvoidingView>
 
         <ActionSheet
             ref={actionSheetRef}

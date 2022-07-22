@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
+import { Alert, KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native'
 import Feather from 'react-native-vector-icons/Feather'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { useRootContext } from '../../RootProvider'
@@ -7,6 +7,7 @@ import { useRootContext } from '../../RootProvider'
 export default function MessageSend({ navigation, route }) {
     const [content, setContent] = useState('')
     const rootContext = useRootContext()
+    
     
     const onPressSend = () => {
         if (content == '') {
@@ -27,7 +28,10 @@ export default function MessageSend({ navigation, route }) {
         ])
     }
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
+    return <KeyboardAvoidingView 
+     style={{ flex: 1, backgroundColor: '#fff' }}
+     keyboardVerticalOffset={40}
+     behavior={"padding"}>
         <Text style={styles.topText}>쪽지</Text>
         <TouchableOpacity onPress={() => { navigation.goBack() }}
             style={styles.closeIcon}>
@@ -37,7 +41,7 @@ export default function MessageSend({ navigation, route }) {
         <TouchableOpacity onPress={onPressSend}>
             <Text style={styles.send}>전송</Text>
         </TouchableOpacity>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
 }
 
 const styles = StyleSheet.create({

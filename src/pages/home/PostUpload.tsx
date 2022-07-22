@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Alert, Image, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, Image, KeyboardAvoidingView, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { launchImageLibrary } from 'react-native-image-picker'
@@ -11,6 +11,7 @@ export default function PostUpload({ route, navigation }) {
     const [text, setText] = useState('')
     const [photoList, setPhotoList] = useState<any[]>([])
     const rootContext = useRootContext()
+    
 
     useFocusEffect(useCallback(() => {
         console.log(route.params)
@@ -97,7 +98,7 @@ export default function PostUpload({ route, navigation }) {
         ])
     }
 
-    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff', marginTop: 25  }}>
+    return <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
         <View style={styles.topView}>
             <Text style={styles.topText}>{route.params.boardName}</Text>
             <TouchableOpacity onPress={() => navigation.goBack()}
@@ -121,6 +122,9 @@ export default function PostUpload({ route, navigation }) {
                         style={{ width: 100, height: 100, marginRight: 5 }} />
                 </TouchableOpacity>)}
             </ScrollView></View>
+        <KeyboardAvoidingView
+         behavior={"padding"}
+         keyboardVerticalOffset={20}> 
         <View style={styles.bottomView}>
             <TouchableOpacity onPress={handleChoosePhoto}>
                 <AntDesign name='addfolder' size={23} color='#151515' />
@@ -130,6 +134,7 @@ export default function PostUpload({ route, navigation }) {
                 <Text style={styles.completeText}>완료</Text>
             </TouchableOpacity>
         </View>
+        </KeyboardAvoidingView>
     </SafeAreaView>
 }
 

@@ -13,6 +13,7 @@ target 'nunetine' do
   )
   # Pods for test_google_signin
   pod 'GoogleSignIn'
+  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   target 'nunetineTests' do
     inherit! :complete
