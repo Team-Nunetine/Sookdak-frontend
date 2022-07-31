@@ -26,7 +26,7 @@ export default function MypageScrap({navigation}) {
     }, [])
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://3.36.250.198:8080/api/user/my-scrap/' + 0).then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/users/my-scrap/' + 0).then((res) => {
             setData(res.data.data.posts)
             setPageIndex(1)
             console.log('스크랩 조회')

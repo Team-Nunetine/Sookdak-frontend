@@ -28,7 +28,7 @@ export default function MypageMywriting({route, navigation}) {
     }, []);    
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://3.36.250.198:8080/api/user/my-post/' + 0).then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/users/my-post/' + 0).then((res) => {
             setData(res.data.data.posts)
             setPageIndex(1)
             console.log(res.data.data.posts.postId)

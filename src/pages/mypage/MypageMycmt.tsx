@@ -25,7 +25,7 @@ export default function MypageMycmt({navigation}) {
     }, []);
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://3.36.250.198:8080/api/user/my-comment/' + 0).then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/users/my-comment/' + 0).then((res) => {
             setData(res.data.data.posts)
             setPageIndex(1)
         }).catch((err) => {

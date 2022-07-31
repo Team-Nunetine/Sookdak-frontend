@@ -237,7 +237,7 @@ export default function PostDetail({ route, navigation }) {
                 <View style={styles.bottomView}>
                     <TouchableOpacity style={styles.like}
                         onPress={() => {
-                            rootContext.api.post('/api/post/' + route.params.postId + '/like')
+                            rootContext.api.post('/api/posts/' + route.params.postId + '/like')
                                 .then((res) => {
                                     if (res.data.success == false)
                                         Alert.alert('오류', res.data.message)

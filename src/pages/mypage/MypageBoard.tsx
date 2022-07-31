@@ -21,7 +21,7 @@ export default function MypageBoard({ route, navigation }) {
     }, [])
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://3.36.250.198:8080/api/user/my-board').then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/users/my-board').then((res) => {
             setData(res.data.data.boards)
         }).catch((err) => console.log(err.response.data))
     },[]),[])
@@ -34,7 +34,7 @@ export default function MypageBoard({ route, navigation }) {
             {
                 text: "예",
                 onPress: () => {
-                    rootContext.api.delete('http://3.36.250.198:8080/api/board/' + boardId).then((res) => {
+                    rootContext.api.delete('http://3.36.250.198:8080/api/boards/' + boardId).then((res) => {
                     console.log("삭제됨") 
                     setData(data.filter(res => res.boardId != boardId))}).catch((err) => console.log(err.response.data))}
             },
