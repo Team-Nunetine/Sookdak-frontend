@@ -25,7 +25,7 @@ const LoginPage = ({navigation}: {navigation: any}) => {
 
     const signIn = () => {
         GoogleSignin.signIn().then((googleRes) => {
-            axios.post('http://3.36.250.198:8080/api/user/login', {
+            axios.post('http://3.36.250.198:8080/api/users/login', {
                 email: googleRes.user.email
             })
             .then(function (res) {
@@ -42,11 +42,11 @@ const LoginPage = ({navigation}: {navigation: any}) => {
     })
     }
 
-    // useEffect(useCallback(() => {
-    //     rootContext.api.get('http://3.36.250.198:8080/api/user/me').then((res) => {
-    //         console.log(res.data.data.email)
-    //     }).catch((err) => console.log(err.response.data))
-    // }, []), [])
+    useEffect(useCallback(() => {
+        rootContext.api.get('http://3.36.250.198:8080/api/users/me').then((res) => {
+            console.log(res.data.data.email)
+        }).catch((err) => console.log(err.response.data))
+    }, []), [])
 
     return(
         <KeyboardAwareScrollView

@@ -26,7 +26,7 @@ export default function BoardPreview({ route, navigation }) {
     let pageNumber = 0
 
     useFocusEffect(useCallback(() => {
-        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageNumber)
+        rootContext.api.get('/api/posts/latest/' + route.params.boardId + '/' + pageNumber)
             .then((res) => {
                 setData(res.data.data.posts)
                 setScrap(res.data.data.star)
@@ -47,10 +47,10 @@ export default function BoardPreview({ route, navigation }) {
                 {
                     text: '확인',
                     onPress: () => {
-                        rootContext.api.post('/api/star/' + route.params.boardId)
+                        rootContext.api.post('/api/stars/' + route.params.boardId)
                             .then((res) => {
                                 setScrap((prev) => !prev)
-                                rootContext.api.get('/api/star')
+                                rootContext.api.get('/api/stars')
                                     .then((res) => {
                                         homeContext.setBoards(res.data.data.stars)
                                     })

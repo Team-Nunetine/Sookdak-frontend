@@ -33,7 +33,7 @@ export default function TimetableMain({ navigation }) {
     const rootContext = useRootContext()
 
     const load = useCallback(() => {
-        rootContext.api.get('/api/lecture')
+        rootContext.api.get('/api/lectures')
             .then((res) => setData(res.data.data.lectures))
             .catch((err) => console.log(err.response.data))
     }, [])
@@ -45,7 +45,7 @@ export default function TimetableMain({ navigation }) {
             { text: '취소' },
             {
                 text: '확인', onPress: () => {
-                    rootContext.api.delete('/api/lecture/' + lectureId)
+                    rootContext.api.delete('/api/lectures/' + lectureId)
                         .then((res) => {
                             if (res.data.success == false)
                                 Alert.alert('오류', res.data.message)

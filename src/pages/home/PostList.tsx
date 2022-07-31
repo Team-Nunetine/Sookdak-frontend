@@ -24,7 +24,7 @@ export default function PostList({ route, navigation }) {
     useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'flex' } })
         navigation.getParent().setOptions({ swipeEnabled: true })
-        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+        rootContext.api.get('/api/posts/latest/' + route.params.boardId + '/' + 0)
             .then((res) => {
                 setData(res.data.data.posts)
                 setPageIndex(1)
@@ -40,7 +40,7 @@ export default function PostList({ route, navigation }) {
     const [refreshing, setRefreshing] = useState(false);
 
     const onRefresh = useCallback(() => {
-        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + 0)
+        rootContext.api.get('/api/posts/latest/' + route.params.boardId + '/' + 0)
             .then((res) => {
                 setData(res.data.data.posts)
                 setPageIndex(1)
@@ -64,7 +64,7 @@ export default function PostList({ route, navigation }) {
     // }, []), [])
 
     const onEndReached = () => {
-        rootContext.api.get('/api/post/latest/' + route.params.boardId + '/' + pageIndex)
+        rootContext.api.get('/api/posts/latest/' + route.params.boardId + '/' + pageIndex)
             .then((res) => {
                 console.log('onEndReached called')
                 console.log(pageIndex)

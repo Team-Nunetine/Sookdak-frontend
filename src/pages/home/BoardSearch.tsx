@@ -19,7 +19,7 @@ export default function BoardSearch({ navigation }) {
     const rootContext = useRootContext()
 
     useFocusEffect(useCallback(() => {
-        rootContext.api.get('/api/board')
+        rootContext.api.get('/api/boards')
             .then((res) => {
                 setAllBoards(res.data.data.boards)
                 setResult(res.data.data.boards)

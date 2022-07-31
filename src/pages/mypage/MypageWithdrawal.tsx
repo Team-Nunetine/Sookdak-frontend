@@ -27,7 +27,7 @@ export default function MypageWithdrawal({navigation}) {
                          console.log('user deleted');
                          rootContext.setUser({user: null})
                          //내부저장소(AsyncStorage)에서 유저 삭제 api 추가
-                         AsyncStorage.clear
+                         AsyncStorage.clear()
                     }}/>
                 </ButtonContainer>
                 </View>

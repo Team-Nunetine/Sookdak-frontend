@@ -42,7 +42,7 @@ export default function PostUpload({ route, navigation }) {
                     text: '확인', onPress: () => {
                         console.log(photoList)
                         fetch(route.params.postId ? ('http://3.36.250.198:8080/api/post/' + route.params.postId)
-                            : ('http://3.36.250.198:8080/api/post/' + route.params.boardId + '/save'), {
+                            : ('http://3.36.250.198:8080/api/post/' + route.params.boardId), {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'multipart/form-data',

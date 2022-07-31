@@ -22,7 +22,7 @@ export default function MessageDetail({ navigation, route }) {
     useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
-        rootContext.api.get('/api/message/' + route.params.roomId + '/0')
+        rootContext.api.get('/api/messages/' + route.params.roomId + '/0')
             .then((res) => {
                 console.log(res.data.data.messages)
                 setData(res.data.data.messages)
@@ -34,7 +34,7 @@ export default function MessageDetail({ navigation, route }) {
     const onEndReached = () => {
         if (endReached)
             return
-        rootContext.api.get('/api/message/' + route.params.roomId + '/' + pageIndex)
+        rootContext.api.get('/api/messages/' + route.params.roomId + '/' + pageIndex)
             .then((res) => {
                 if (res.data.data.messages == []) {
                     setEndReached(true)

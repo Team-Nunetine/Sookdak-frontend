@@ -37,7 +37,7 @@ export default function HomeMain({ navigation, route }) {
                 console.log(err.response.data)
             })
 
-        rootContext.api.get('/api/star')
+        rootContext.api.get('/api/stars')
             .then((res) => {
                 homeContext.setBoards(res.data.data.stars)
             })

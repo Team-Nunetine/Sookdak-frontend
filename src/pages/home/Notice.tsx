@@ -25,7 +25,7 @@ export default function Notice({ navigation, route }) {
     useFocusEffect(useCallback(() => {
         navigation.getParent().getParent().setOptions({ tabBarStyle: { display: 'none' } })
         navigation.getParent().setOptions({ swipeEnabled: false })
-        rootContext.api.get('/api/message')
+        rootContext.api.get('/api/messages')
             .then((res) => setTab1Data(res.data.data.rooms))
             .catch((err) => console.log(err.response.data))
     }, []))

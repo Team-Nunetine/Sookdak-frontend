@@ -23,15 +23,15 @@ export default function BoardCreation({ navigation }) {
             {
                 text: '확인',
                 onPress: () => {
-                    rootContext.api.post('/api/board/save',
+                    rootContext.api.post('/api/boards',
                         {
                             name: name,
                             description: description
                         }
                     ).then((res) => {
-                        rootContext.api.post('/api/star/' + res.data.data.boardId)
+                        rootContext.api.post('/api/stars/' + res.data.data.boardId)
                             .then((res) => {
-                                rootContext.api.get('/api/star')
+                                rootContext.api.get('/api/stars')
                                     .then((res) => {
                                         homeContext.setBoards(res.data.data.stars)
                                         navigation.pop(2)

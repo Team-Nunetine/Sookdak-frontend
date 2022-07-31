@@ -18,8 +18,8 @@ export default function MessageSend({ navigation, route }) {
             { text: '취소' },
             {
                 text: '확인', onPress: () => {
-                    rootContext.api.post(route.params.postId ? '/api/message/' + route.params.postId + '/save'
-                        : '/api/message/' + route.params.roomId, { content: content })
+                    rootContext.api.post(route.params.postId ? '/api/messages/post/' + route.params.postId
+                        : '/api/messages/room/' + route.params.roomId, { content: content })
                         .then((res) => console.log(res.data))
                         .catch((err) => console.log(err.response.data))
                     navigation.goBack()

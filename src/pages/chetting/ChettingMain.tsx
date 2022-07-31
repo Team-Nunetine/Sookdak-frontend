@@ -73,7 +73,7 @@ export default function ChettingMain({ navigation }) {
              onPress={() => {
                  console.log('채팅방')
                  navigation.navigate('ChattingRoom', { 
-                     roomName: item.name})}}>
+                     roomName: item.name, roomId: item.roomId})}}>
                 <View key={item.roomId} style={styles.itemContainer}>
                     <Text style={styles.roomName}>{item.name}</Text>
                     <Text style={styles.desc}>{item.info}</Text>

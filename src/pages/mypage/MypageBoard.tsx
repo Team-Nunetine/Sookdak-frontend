@@ -21,7 +21,7 @@ export default function MypageBoard({ route, navigation }) {
     }, [])
 
     useEffect(useCallback(() => {
-        rootContext.api.get('http://3.36.250.198:8080/api/user/myboard').then((res) => {
+        rootContext.api.get('http://3.36.250.198:8080/api/user/my-board').then((res) => {
             setData(res.data.data.boards)
         }).catch((err) => console.log(err.response.data))
     },[]),[])

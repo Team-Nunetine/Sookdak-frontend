@@ -62,10 +62,10 @@ export default function PostDetail({ route, navigation }) {
     }, []))
 
     const load = (callBack) => {
-        rootContext.api.get('/api/post/' + route.params.postId)
+        rootContext.api.get('/api/posts/' + route.params.postId)
             .then((res) => {
                 setPostData(res.data.data.post)
-                rootContext.api.get('/api/comment/' + route.params.postId)
+                rootContext.api.get('/api/comments/' + route.params.postId)
                     .then((res) => {
                         setCommentsData(res.data.data.comments)
                         setLoading(false)
@@ -115,7 +115,7 @@ export default function PostDetail({ route, navigation }) {
 
     const upload = () => {
         setUploadLoading(true)
-        fetch('http://3.36.250.198:8080/api/comment/' + route.params.postId + '/' + currentFocusedComment?.commentId + '/save', {
+        fetch('http://3.36.250.198:8080/api/comments/' + route.params.postId + '/' + currentFocusedComment?.commentId, {
             method: 'POST',
             headers: {
                 'Content-Type': 'multipart/form-data',

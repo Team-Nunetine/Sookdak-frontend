@@ -27,7 +27,7 @@ export default function AddSchedule({ navigation }) {
     const [pageIndex, setPageIndex] = useState(0)
 
     const onEndEditing = () => {
-        rootContext.api.post('/api/lecture/search/0', {
+        rootContext.api.post('/api/lectures/search/0', {
             word: value
         })
             .then((res) => {
@@ -38,7 +38,7 @@ export default function AddSchedule({ navigation }) {
     }
 
     const onEndReached = () => {
-        rootContext.api.post('/api/lecture/search/' + pageIndex, {
+        rootContext.api.post('/api/lectures/search/' + pageIndex, {
             word: value
         })
             .then((res) => {
@@ -60,7 +60,7 @@ export default function AddSchedule({ navigation }) {
     }
 
     const onPressAdd = () => {
-        rootContext.api.post('/api/lecture/' + selected?.lectureId)
+        rootContext.api.post('/api/lectures/' + selected?.lectureId)
             .then((res) => {
                 Alert.alert(res.data.success ? '알림' : '오류', res.data.message)
                 if (res.data.success)
