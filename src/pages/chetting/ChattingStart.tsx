@@ -27,11 +27,12 @@ export default function ChattingStart({ route, navigation }) {
             console.log(err)
         })
 
-        if(title == "") {
+        if(title.length == 0) 
             return Alert.alert('채팅방 이름을 입력해주세요.')
-        }
         else {
-           return navigation.navigate('ChattingRoom', {roomName: title})
+            if(desc.length == 0) 
+                return Alert.alert('채팅방 소개를 입력해주세요.')
+            return navigation.navigate('ChattingRoom', {roomName: title})
         }
     }
 

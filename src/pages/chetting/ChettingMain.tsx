@@ -20,7 +20,9 @@ export default function ChettingMain({ navigation }) {
     const [data, setData] = useState<DataType[]>([])
     const [refreshing, setRefreshing] = useState(false)
     
-    const onRefresh = useCallback(() => {}, [])
+    const onRefresh = useCallback(() => {
+        setStatus(false)
+    }, [])
 
     const listTab = [
         {
@@ -51,8 +53,7 @@ export default function ChettingMain({ navigation }) {
     }
 
     const searchRoom = (input) => {
-        let Data = data
-        let searchData = Data.filter((item) => {
+        let searchData = data.filter((item) => {
             return item.name.includes(input)
         });
         setDatalist(searchData)
